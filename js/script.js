@@ -1,6 +1,6 @@
 /* script.js
 
-Standard Notes Generator Version 5.3.270326
+Standard Notes Generator Version 5.0.000000
 Developed & Designed by: QA Ryan */
 
 // FIRST LOAD CHECK
@@ -13145,7 +13145,7 @@ function resetButtonHandler() {
         });
 
         const footerElement = document.getElementById("footerValue");
-        const footerText = "Standard Notes Generator Version 5.3.270326";
+        const footerText = "Standard Notes Generator Version 5.0.000000";
         typeWriter(footerText, footerElement, 50);
 
         setTimeout(function() {
