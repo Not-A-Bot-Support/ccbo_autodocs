@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standard Notes Generator V5.3</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="overlay" style="display: none;"></div>
+
+    <div class="divHeader">
+        <div class="formDivHeader">
+            <img src="images/header.png" alt="Logo" class="header-logo">
+        </div>
+    </div>
+
+    <div class="mainContainer">
+        <div id="floatingPanel">
+            <div id="fabButton">
+                <img src="images/assistant.png" alt="Assistant" draggable="false">
+            </div>
+
+            <div id="fabMenu">
+                <nav>
+                    <ul>
+                        <li onclick="runFabAction(openDuplicateTab)">Duplicate Tab</li>
+                        <li onclick="runFabAction(exportDataAsExcel)">Export Notes to Excel (.xlsx)</li>
+                        <li onclick="runFabAction(exportDataAsTxt)">Export Notes to Notepad (.txt)</li>
+                        <li onclick="runFabAction(deleteAllData)">Clear Saved Records</li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div id="fabMessage"></div>
+
+        </div>
+
+        <div class="scrollWrapper">
+            <div class="divsContainer">
+                <div class="form1Div" id="form1Container">
+                    <form id="frm1" name="frm1">
+                    <table>
+                        <tr>
+                            <th colspan="2">
+                                <div class="form1DivHeader">AGENT DETAILS</div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="agent-name">Agent Name*</label>
+                                <div class="form1DivInput">
+                                    <input type="text" id="agent-name" name="agentName">
+                                </div>
+                            </td>
+                            <td>
+                                <label for="team-lead">Team Lead*</label>
+                                <div class="form1DivInput">
+                                    <input type="text" id="team-lead" name="teamLead">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="pldt-user">PLDT Username*</label>
+                                <div class="form1DivInput">
+                                    <input type="text" id="pldt-user" name="pldtUser" placeholder="t-jdelacruz">
+                                </div>
+                            </td>
+                            <!-- <td>
+                                <label for="channel">Channel*</label>
+                                <div class="form1DivInput">
+                                    <select id="channel" name="selectChannel">
+                                        <option value="" disabled selected></option>
+                                        <option value="CDT-CCBO">CDT-CCBO</option>
+                                        <option value="CDT-HOTLINE">CDT-HOTLINE</option>
+                                        <option value="CDT-SOCMED">CDT-SOCMED</option>
+                                    </select>
+                                </div>
+                            </td> -->
+                            <td>
+                                <label for="caseOrigin">Channel*</label>
+                                <div class="form1DivInput">
+                                    <select id="caseOrigin" name="selectOrigin">
+                                        <option value="" disabled selected></option>
+                                        <option value="Chatbot">CHATBOT</option>
+                                        <option value="Chatbot_Ordertake">CHATBOT_ORDERTAKE</option>
+                                        <option value="Ordertake">ORDERTAKE</option>
+                                        <option value="Webform">WEBFORM</option>
+                                        <option value="Webform_Ordertake">WEBFORM_ORDERTAKE</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- <tr id="case-origin-row" style="display: none;">
+                            <td colspan="2">
+                                <label>Case Origin*</label>
+                                <div class="form1DivInput radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="selectCaseOrigin" value="Chatbot" required>
+                                        <span>Chatbot</span>
+                                    </label>
+
+                                    <label class="radio-option">
+                                        <input type="radio" name="selectCaseOrigin" value="Ordertake">
+                                        <span>Ordertake</span>
+                                    </label>
+
+                                    <label class="radio-option">
+                                        <input type="radio" name="selectCaseOrigin" value="Webform">
+                                        <span>Webform</span>
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr> -->
+                        <tr id="case-and-account-header-row" style="display: none;">
+                            <th colspan="2">
+                                <div class="form1DivHeader">CASE & ACCOUNT DETAILS</div>
+                            </th>
+                        </tr>
+                        <tr id="case-num-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="case-num" id="case-num-label">Salesforce Case #</label>
+                                <div class="form1DivInput">
+                                    <input type="number" class="input-and-button" id="case-num" name="sfCaseNum">
+                                    <button type="button" class="input-and-button" id="case-num-btn" tabindex="-1">📋 Copy</button>
+                                </div>
+                            </td> 
+                        </tr>
+                        <tr id="cust-name-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="cust-name">Customer/Caller Name</label>
+                                <div class="form1DivInput">
+                                    <input type="text" class="input-and-button" id="cust-name" name="custName">
+                                    <button type="button" class="input-and-button" tabindex="-1">📋 Copy</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="acc-num-row" style="display: none;">    
+                            <td colspan="2">
+                                <label for="account-num">Account #</label>
+                                <div class="form1DivInput">
+                                    <input type="number" class="input-and-button" id="account-num" name="accountNum">
+                                    <button type="button" class="input-and-button" tabindex="-1">📋 Copy</button>
+                                </div>
+                            </td>               
+                        </tr>
+                        <tr id="phone-num-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="landline-num">Phone #</label>
+                                <div class="form1DivInput">
+                                    <input type="number" class="input-and-button" id="landline-num" name="landlineNum">
+                                    <button type="button" class="input-and-button" tabindex="-1">📋 Copy</button>
+                                </div>
+                            </td> 
+                        </tr>
+                        <tr id="saved-notes-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="savedNotes" id="savedNotes-label">Saved Notes</label>
+                                <div class="form1DivInput">
+                                    <textarea class="wocas" id="savedNotes" name="savedNotes"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="lob-and-voc-row" style="display: none;">
+                            <td>
+                                <label for="lob">Concern Type*</label>
+                                <div class="form1DivInput">
+                                    <select id="lob" name="selectLOB">
+                                        <option value="" disabled selected></option>
+                                        <option value="NON-TECH">NON-TECH</option>
+                                        <!-- <option value="TECH">TECH</option> -->
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="voc">Voice of the Customer*</label>
+                                <div class="form1DivInput">
+                                    <select id="voc" name="selectVOC">
+                                        <option value="" disabled selected></option>
+                                        <option value="INQUIRY">INQUIRY</option>
+                                        <option value="COMPLAINT">COMPLAINT</option>
+                                        <option value="FOLLOW-UP">FOLLOW-UP</option>
+                                        <option value="REQUEST">REQUEST</option>
+                                        <option value="OTHERS">OTHERS</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="wocas-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="wocas" id="wocas-label">WOCAS</label>
+                                <div class="form1DivInput">
+                                    <textarea class="wocas" rows="2" id="wocas" name="WOCAS"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="service-id-row" style="display: none;">    
+                            <td colspan="2">
+                                <label for="service-id">Service ID*</label>
+                                <div class="form1DivInput">
+                                    <input type="text" class="input-and-button" id="service-id" name="serviceID">
+                                    <button type="button" class="input-and-button" tabindex="-1">📋 Copy</button>
+                                </div>
+                            </td>                
+                        </tr>
+                        <tr id="option82-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="option82">Option82/NE Type*</label>
+                                <div class="form1DivInput">
+                                    <input type="text" class="input-and-button" id="option82" name="Option82">
+                                    <div class="copy-dropdown">
+                                        <button type="button" class="input-and-button copy-btn">📋 Copy</button>
+
+                                        <div class="copy-menu">
+                                            <button type="button" class="input-and-button copy-option" data-type="node">Node</button>
+                                            <button type="button" class="input-and-button copy-option" data-type="full">Option82</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="intent-wocas-row" style="display: none;">
+                            <td colspan="2">
+                                <label for="selectIntent">WOCAS Based Intent</label>
+                                <div class="form1DivInput">
+                                    <select id="selectIntent" name="selectIntentForms">
+                                        <option value="" disabled selected>— Please select the correct Intent/WOCAS —</option>
+                                        <!-- Tech Intents -->
+                                        <optgroup label="No Dial Tone and No Internet Connection">
+                                            <option data-group="smt_complaint" value="form100_1">All Services Down</option>
+                                            <option data-group="smt_complaint" value="form100_2">Red LOS</option>
+                                            <option data-group="smt_complaint" value="form100_3">Defective Modem - No Power Light</option>
+                                            <option data-group="smt_complaint" value="form100_4">Defective/Damaged Modem</option>
+                                            <option data-group="smt_complaint" value="form100_5">Damaged Modem Cable/Cord</option>
+                                            <option data-group="smt_complaint" value="form100_6">Uninstalled Modem (Fiber)</option>
+                                            <option data-group="smt_complaint" value="form100_7">Old Devices Not Working on WiFi6 Modem (Fiber)</option>
+                                        </optgroup>
+                                        <optgroup label="No Internet Connection">
+                                            <option data-group="smt_complaint" value="form500_1">No Internet Connection</option>
+                                            <option data-group="smt_complaint" value="form500_2">Redirected to PLDT Payment Reminder Portal</option>
+                                            <option data-group="smt_complaint" value="form500_3">Defective Mesh</option>
+                                            <option data-group="smt_complaint" value="form500_4">Damaged Mesh</option>
+                                        </optgroup>
+                                        <optgroup label="Slow Internet/Intermittent Connection">
+                                            <option data-group="smt_complaint" value="form501_1">Slow Internet Connection</option>
+                                            <option data-group="smt_complaint" value="form501_2">Low Download/Upload Speed</option>
+                                            <option data-group="smt_complaint" value="form501_3">Availed SAO</option>
+                                            <option data-group="smt_complaint" value="form501_4">Frequent Disconnection</option>
+                                            <option data-group="smt_complaint" value="form501_5">Gaming - High Latency</option>
+                                            <option data-group="smt_complaint" value="form501_6">Gaming - Lag</option>
+                                        </optgroup>
+                                        <optgroup label="No Dial Tone">
+                                            <option data-group="smt_complaint" value="form101_1">No Dial Tone</option>
+                                            <option data-group="smt_complaint" value="form101_2">Fast Busy Tone</option>
+                                            <option data-group="smt_complaint" value="form101_3">Defective Telset - NDT</option>
+                                            <option data-group="smt_complaint" value="form101_4">Defective/Damaged Telset</option>
+                                        </optgroup>
+                                        <optgroup label="Always On">
+                                            <option data-group="smt_complaint" value="form500_5">No Internet Connection</option>
+                                            <option data-group="smt_complaint" value="form501_7">Slow Internet Connection</option>
+                                            <option data-group="smt_complaint" value="form101_5">No Dial Tone</option>
+                                            <option data-group="smt_complaint" value="form510_9">No Audio/Video Output</option>
+                                            <option data-group="smt_complaint" value="form500_6">Check back-up Wi-Fi if working (Always On)</option>
+                                        </optgroup>
+                                        <optgroup label="Poor Call Quality/Noisy Telephone Line">
+                                            <option data-group="smt_complaint" value="form102_1">Noisy Line</option>
+                                            <option data-group="smt_complaint" value="form102_2">Cut Calls</option>
+                                            <option data-group="smt_complaint" value="form102_3">Poor Reception/Transmission</option>
+                                            <option data-group="smt_complaint" value="form102_4">Defective Telset - Noisy Line</option>
+                                            <option data-group="smt_complaint" value="form102_5">Defective Telset - Cut Calls</option>
+                                            <option data-group="smt_complaint" value="form102_6">Defective Telset - Poor Reception/Transmission</option>
+                                            <option data-group="smt_complaint" value="form102_7">Damaged Telset Cable/Cord</option>
+                                        </optgroup>
+                                        <optgroup label="Cannot Make a Call">
+                                            <option data-group="smt_complaint" value="form103_1">Cannot Make a Call</option>
+                                            <option data-group="smt_complaint" value="form103_2">No Outgoing Call</option>
+                                            <option data-group="smt_complaint" value="form103_3">Defective Telset - Number Keys</option>
+                                        </optgroup>
+                                        <optgroup label="Cannot Receive a Call">
+                                            <option data-group="smt_complaint" value="form103_4">Cannot Receive Calls</option>
+                                            <option data-group="smt_complaint" value="form103_5">No Incoming Call</option>
+                                        </optgroup>
+                                        <optgroup label="Selective Browsing Complaints">
+                                            <option data-group="smt_complaint" value="form502_1">Selective Browsing</option>
+                                            <option data-group="smt_complaint" value="form502_2">Cannot Load Specific Website</option>
+                                        </optgroup>
+                                        <optgroup label="No Audio/Video Output">
+                                            <option data-group="smt_complaint" value="form510_1">No Audio/Video Output</option>
+                                            <option data-group="smt_complaint" value="form510_2">Cignal TV is Down/No Connection</option>
+                                            <option data-group="smt_complaint" value="form510_3">Defective Set-Top-Box</option>
+                                            <option data-group="smt_complaint" value="form510_4">Damaged Set-Top-Box</option>
+                                            <option data-group="smt_complaint" value="form510_5">Cannot Read Smart Card</option>
+                                            <option data-group="smt_complaint" value="form510_6">Defective HDMI/RCA</option>
+                                            <option data-group="smt_complaint" value="form510_7">No Channel</option>
+                                            <option data-group="smt_complaint" value="form510_8">Channel 001 Only</option>
+                                        </optgroup>
+                                        <optgroup label="Poor Audio/Video Quality">
+                                            <option data-group="smt_complaint" value="form511_1">Poor Audio/Video Quality</option>
+                                            <option data-group="smt_complaint" value="form511_2">Picture Freezing</option>
+                                            <option data-group="smt_complaint" value="form511_3">Pixelated Video</option>
+                                            <option data-group="smt_complaint" value="form511_4">Out-of-Sync</option>
+                                            <option data-group="smt_complaint" value="form511_5">Loop Back Video</option>
+                                        </optgroup>
+                                        <optgroup label="Missing Set-Top-Box Functions">
+                                            <option data-group="smt_complaint" value="form512_1">Missing Channels</option>
+                                            <option data-group="smt_complaint" value="form512_2">Cannot Record Video</option>
+                                            <option data-group="smt_complaint" value="form512_3">Defective Remote Control</option>
+                                        </optgroup>
+                                        <optgroup label="Streaming Apps Issues">
+                                            <option data-group="smt_complaint" value="formStrmApps_1">Eufy is Not Working</option>
+                                            <option data-group="smt_complaint" value="formStrmApps_2">Stream TV is Not Working</option>
+                                            <option data-group="smt_complaint" value="formStrmApps_3">NETFLIX Problem</option>
+                                            <option data-group="smt_complaint" value="formStrmApps_4">VIU Problem</option>
+                                            <option data-group="smt_complaint" value="formStrmApps_5">HBO Max Problem</option>
+                                        </optgroup>
+
+                                        <!-- Tech Follow-Up Intent -->
+                                        <option value="formFfupRepair">Repair/Network Outage</option>
+
+                                        <!--- Non-Tech Inquiry ---->
+                                        <option data-group="inquiry" value="formInqBill">Billing Inquiry</option>
+                                        <option data-group="inquiry" value="formInqDowngrade">Downgrade</option>
+                                        <option data-group="inquiry" value="formInqChangeTelNum">Change Telephone Number</option>
+                                        <option data-group="inquiry" value="formInqSpecialFeatures">Special Features</option>
+                                        <option data-group="inquiry" value="formInqUpgrade">Upgrade</option>
+
+                                        <!--- Non-Tech Complaint ---->
+                                        <option data-group="complaint" value="formCompMisappPay">Misapplied Payment</option>
+                                        <option data-group="complaint" value="formCompMistreat">Mistreat</option>
+                                        <!-- <option data-group="complaint" value="formCompMyHomeWeb">Cannot Open MyHome Website</option> -->
+                                        <!-- <option data-group="complaint" value="formCompMisappliedPayment">Misapplied Payment</option> -->
+                                        <!-- <option data-group="complaint" value="formCompPersonnelIssue">Personnel Issue</option> -->
+                                        <!-- <option data-group="complaint" value="formCompUnreflectedPayment">Unreflected Payment</option> -->
+
+                                        <!--- Non-Tech Follow-Up ---->
+                                        <option data-group="follow-up" value="formFfupBillAdjust">Bill Adjustment</option>
+                                        <option data-group="follow-up" value="formFfupCignalIPTV">Cignal/IPTV</option>
+                                        <option data-group="follow-up" value="formFfupChangeOwnership">Change Ownership</option>
+                                        <option data-group="follow-up" value="formFfupChangeTelNum">Change Telephone Number</option>
+                                        <option data-group="follow-up" value="formFfupDowngrade">Downgrade</option>
+                                        <!-- <option data-group="follow-up" value="formFfupDDE">Due Date Extension</option> -->
+                                        <option data-group="follow-up" value="formFfupInmove">Inmove</option>
+                                        <!-- <option data-group="follow-up" value="formFfupMigration">Migration</option> -->
+                                        <option data-group="follow-up" value="formFfupMisappPay">Misapplied Payment</option>
+                                        <option data-group="follow-up" value="formFfupPermaDisco">Permanent Disconnection</option>
+                                        <option data-group="follow-up" value="formFfupReconnect">Reconnection</option>
+                                        <option data-group="follow-up" value="formFfupReloc">Relocation</option>
+                                        <option data-group="follow-up" value="formFfupSpecialFeat">Special Features</option>
+                                        <!-- <option data-group="follow-up" value="formFfupSAO">Speed Add On 500</option> -->
+                                        <option data-group="follow-up" value="formFfupTempDisco">Temporary Disconnection</option>
+                                        <!-- <option data-group="follow-up" value="formFfupUP">Unreflected Payment</option> -->
+                                        <option data-group="follow-up" value="formFfupUpgrade">Upgrade</option>
+
+                                        <!--- Non-Tech Request --->
+                                        <option data-group="request" value="formReqBillAdjust">Billing Adjustment</option>
+                                        <optgroup label="Change Configuration - Data">
+                                            <option data-group="request" value="form300_1">Change of WiFi Name/Password</option>
+                                            <option data-group="request" value="form300_2">Request for Local User GUI Access</option>
+                                            <option data-group="request" value="form300_3">Request for Super Admin GUI Access</option>
+                                            <option data-group="request" value="form300_4">Change modem set-up from Route to Bridge Mode</option>
+                                            <option data-group="request" value="form300_5">Change modem set-up from Bridge to Route Mode</option>
+                                            <option data-group="request" value="form300_6">LAN Port Activation</option>
+                                            <option data-group="request" value="form300_7">Request for Public IP</option>
+                                            <option data-group="request" value="form300_8">Request for Private IP</option>
+                                        </optgroup>
+                                        <optgroup label="Change Ownership">
+                                            <option data-group="request" value="formReqSupRetAccNum">Supersedure retain Account number</option>
+                                            <option data-group="request" value="formReqSupChangeAccNum">Supersedure with change account number</option>
+                                        </optgroup>
+                                        <option data-group="request" value="formReqChangeTelNum">Change Telephone Number</option>
+                                        <option data-group="request" value="formReqCignalIPTV">Cignal/IPTV</option>
+                                        <option data-group="request" value="formReqTempDisco">Disconnection (HD/VTD)</option>
+                                        <option data-group="request" value="formReqDowngrade">Downgrade</option>
+                                        <option data-group="request" value="formReqInmove">Inmove</option>
+                                        <!-- <option data-group="request" value="formReqMigration">Migration</option> -->
+                                        <option data-group="request" value="formReqPermaDisco">Permanent Disconnection</option>
+                                        <option data-group="request" value="formReqReconnect">Reconnection</option>
+                                        <option data-group="request" value="formReqRelocation">Relocation</option>
+                                        <option data-group="request" value="formReqSpecFeat">Special Features</option>
+                                        <option data-group="request" value="formReqUpgrade">Upgrade</option>
+
+                                        <!--- Others ---->
+                                        <option data-group="others" value="others164">Bantay Kable (164)</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    </form>
+                </div>
+
+                <div class="form2Div" id="form2Container">
+                    <table id="form2ButtonTable">
+                        <tr  id="buttons-row" style="display: none;">
+                            <td colspan="2"><button type="button" id="saveButton" class="form1-button" tabindex="-1">💾 Save</button></td>
+                            <td colspan="2">
+                                <button type="button" id="resetButton" class="form1-button" tabindex="-1">🔄 Reset</button></td>
+                            <!-- <td>
+                                <button type="button" id="exportButton" class="form1-button" tabindex="-1">📄 Export</button>
+                            </td>
+                            <td>
+                                <button type="button" id="deleteButton" class="form1-button" tabindex="-1">🗑️ Delete All</button>
+                            </td> -->
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="customScrollbar"></div>
+        </div>
+
+        <div class="notepadDiv" id="notepadContainer">
+            <div class="notepadHeader">
+                <h3>🗒️ Notepad</h3>
+            </div>
+            <div class="notepad" contenteditable="true"></div>
+        </div>
+
+        <div class="updatesDiv" id="updatesContainer">
+            <div class="updatesHeader">
+                <h3>📢 Listen, Look, and Listen and Learn 😤</h3>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="customAlert" class="alert-overlay">
+        <div class="alert-box">
+            <p id="alertMessage"></p>
+            <div class="alert-actions">
+                <button id="alertOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="customConfirm1" class="alert-overlay">
+        <div class="alert-box">
+            <p id="confirmMessage1"></p>
+            <div class="alert-actions">
+                <button id="confirmKeep">Keep</button>
+                <button id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="customConfirm2" class="alert-overlay">
+        <div class="alert-box">
+            <p id="confirmMessage2"></p>
+            <div class="alert-actions">
+                <button id="confirmOk">OK</button>
+                <button id="confirmCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    
+    
+    <div class="footer">
+        <div class="footer-content">
+            <div class="timer">
+                <table id="timerTable">
+                    <tr>
+                        <td id="timerDisplay" colspan="2">00:00:00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button id="timerToggleButton">Start</button>
+                        </td>
+                        <td>
+                            <button id="timerResetButton">Reset</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="footer-text">
+                <span id="footerValue">Standard Notes Generator Version 5.3.270326</span>
+                <span>&copy; Developed and designed by: QA Team</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="floatingDiv" style="display: none;">
+        <div id="floatingDivHeader"></div>
+        <div id="copiedValues"></div>
+        <button id="okButton">Close</button>
+    </div>
+
+    <div id="floating1Div" style="display: none;">
+        <div id="floating1DivHeader"></div>
+        <div id="sfTaggingValues"></div>
+        <button id="okButton1">Close</button>
+    </div>
+
+    <div id="floating2Div" style="display: none;">
+        <div class="form3Div" id="form3Container"></div>
+    </div>
+
+    <!-- <div id="ticketTimer" class="floating-timer noselect" style="display:none;">
+        <div id="ticketTimerHeader">Ticket Creation Timer</div>
+        <div id="ticketTimerDisplay">00:00:00</div>
+    </div> -->
+
+    <br>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="js/script.js"></script>
+
+</html>
