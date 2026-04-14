@@ -43,7 +43,7 @@ body {
     background-color: #2C3E50;
     height: 75px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: top 0.3s ease, border-radius 0.3s ease, background-color 0.3s ease; 
+    transition: top 0.3s ease, background-color 0.3s ease;
     border-bottom: 5px solid #92a6bb;
 }
 
@@ -96,7 +96,6 @@ header {
     height: calc(100dvh - 150px);
     background-color: #f4f6f8;
     border: 1px solid #ccc;
-    border-radius: 10px;
     padding: 15px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     /* z-index: 100; */
@@ -121,7 +120,6 @@ header {
     flex: 1;
     padding: 10px;
     box-sizing: border-box;
-    border-radius: 8px;
     border: 1px solid #ddd;
     line-height: 1.5;
     resize: none;
@@ -135,7 +133,6 @@ header {
     width: 100%;
     height: 100%;
     padding: 10px;
-    border-radius: 8px;
     border: 1px solid #ddd;
     overflow-y: auto;
     outline: none;
@@ -159,7 +156,6 @@ header {
 
 .notepad::-webkit-scrollbar-thumb {
     background: rgba(0,0,0,0.35);
-    border-radius: 10px;
 }
 
 .notepad::-webkit-scrollbar-thumb:hover {
@@ -174,7 +170,6 @@ header {
     width: 600px;
     background-color: #f4f6f8;
     border: 1px solid #ccc;
-    border-radius: 10px;
     padding: 15px 15px 5px 15px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     max-height: calc(100dvh - 150px);
@@ -203,7 +198,6 @@ header {
 .updateItem {
     background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
     padding: 10px;
     margin-bottom: 10px;
 }
@@ -229,7 +223,6 @@ header {
 #updatesContainer {
   background-color: #f4f6f8;
   border: 1px solid #ccc;
-  border-radius: 10px;
   /* padding: 10px 15px; */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   line-height: 1.4;
@@ -264,7 +257,7 @@ header {
 
 /* expanded state */
 .updateItem.active .updateContent {
-    max-height: 500px; /* enough height for content */
+    max-height: 2000px;
 }
 
 .scrollWrapper {
@@ -280,7 +273,6 @@ header {
     flex-direction: column;
     background-color: rgba(244, 246, 248, 0.95); /* 0 = fully transparent, 1 = solid */
     border: 1px solid #ccc;
-    border-radius: 10px;
     padding: 5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     box-sizing: border-box;
@@ -298,7 +290,6 @@ header {
     width: 8px;
     height: 50px; 
     background: rgba(0,0,0,0.3);
-    border-radius: 4px;
     opacity: 0;
     transition: opacity 0.3s;
     cursor: pointer;
@@ -358,7 +349,6 @@ td:last-child {
     padding: 10px 20px 7px 20px;  
     text-align: center;
     cursor: default;
-    border-radius: 5px;
     letter-spacing: 2px;
 }
 
@@ -384,8 +374,7 @@ input, select {
     padding: 0 5px;
     margin: 0;
     box-sizing: border-box;
-    border: solid 2px #2C3E50;
-    border-radius: 5px;  
+    border: solid 1px #2C3E50;
     line-height: 1.5;
     color: #2C3E50;
 }
@@ -399,8 +388,7 @@ input:focus, select:focus {
     display: flex;
     gap: 20px;
     align-items: center;
-    border: solid 2px #2C3E50;
-    border-radius: 5px;
+    border: solid 1px #2C3E50;
     padding: 0 20px;
     height: 29px;
 }
@@ -438,9 +426,7 @@ textarea.wocas {
     padding: 5px;  
     margin: 0;
     box-sizing: border-box;  
-    border: none;
-    border-radius: 5px;
-    border: solid 2px #2C3E50;  
+    border: solid 1px #2C3E50;  
     line-height: 1.5;  
     resize: vertical;  
     min-height: 50px;  
@@ -458,8 +444,7 @@ input.input-and-button {
     padding: 0 5px;  
     line-height: 1.5px;
     box-sizing: border-box;
-    border: 2px solid #2C3E50;
-    border-radius: 5px;  
+    border: 1px solid #2C3E50;
     margin-right: 5px;
 }
 
@@ -468,8 +453,7 @@ select.input-and-button {
     padding: 0 5px;  
     line-height: 1.5px;
     box-sizing: border-box;
-    border: 2px solid #2C3E50;
-    border-radius: 5px; 
+    border: 1px solid #2C3E50;
     margin-right: 5px; 
 }
 
@@ -511,7 +495,6 @@ button.form1-button {
     justify-content: space-between;  
     width: 100%;  
     box-sizing: border-box;  
-    border-radius: 5px;
     color: #ffffff;
     padding: 0;
     background-color: #2C3E50;
@@ -540,8 +523,7 @@ button.form1-button {
     text-align: left;
     width: 100%;  
     box-sizing: border-box;  
-    border-radius: 5px;
-    border: 2px solid #2C3E50;
+    border: 1px solid #2C3E50;
     color: #fff;
     padding: 0;
     background-color: #2C3E50;
@@ -577,8 +559,7 @@ button.form1-button {
     text-align: left;
     width: 100%;  
     box-sizing: border-box;  
-    border-radius: 5px;
-    border: 2px solid #2C3E50;
+    border: 1px solid #2C3E50;
     color: #2C3E50;
     padding: 0;
     background-color: #fff;
@@ -672,7 +653,6 @@ label.form2-label {
 
 input.form2-input, select.form2-input {
     width: 57.5%; 
-    border-radius: 0px 5px 5px 0px; 
 }
 
 .form2DivTextarea {
@@ -682,8 +662,7 @@ input.form2-input, select.form2-input {
     justify-content: flex-start;  
     width: 100%;  
     box-sizing: border-box;  
-    border-radius: 5px;
-    border: 2px solid #2C3E50;
+    border: 1px solid #2C3E50;
     color: #ffffff;
     padding: 0;
     background-color: #2C3E50;
@@ -703,7 +682,6 @@ textarea.form2-textarea {
     margin: 0;  
     box-sizing: border-box; 
     border: none;
-    border-radius: 0 0 5px 5px; 
     line-height: 1.5; 
     resize: none;
     overflow-y: hidden; 
@@ -713,7 +691,6 @@ textarea.form2-textarea {
 button.form2-button {
     width: 100%;  
     padding: 0;  
-    border-radius: 5px;  
     color: white;
     cursor: pointer;
     text-align: center;
@@ -729,6 +706,7 @@ input, select {
     height: 28px;
 }
 
+/* Overlay Styles */
 #overlay {
     position: fixed;
     top: 0;
@@ -738,46 +716,110 @@ input, select {
     background-color: rgba(0, 0, 0, 0.5); 
     z-index: 999; 
     pointer-events: all; 
+
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-#floatingDiv {
+#overlay.show {
+    opacity: 1;
+}
+
+#overlay.hide {
+    opacity: 0;
+}
+
+/* floatingDivs Default State */
+#floatingDiv,
+#floating1Div,
+#floating2Div,
+#floating3Div {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translate(-50%, -50%) scale(1);
+    
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s ease,
+        filter 0.5s ease;
+}
+
+/* foatingDivs Opening State */
+#floatingDiv.show,
+#floating1Div.show,
+#floating2Div.show,
+#floating3Div.show {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* floatingDivs Closing State*/
+#floatingDiv.hide,
+#floating1Div.hide,
+#floating2Div.hide,
+#floating3Div.hide {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#floatingDiv,
+#floating1Div,
+#floating2Div,
+#floating3Div {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    border: 2.5px solid #2C3E50;
-    border-radius: 7.5px;
+    border: 1px solid #2C3E50;
     background-color: #F5F7FA;
     padding: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    width: 460px;
-    min-height: 15%; 
-    max-height: 95%; 
+    min-height: 15%;
+    max-height: 95%;
     font-weight: normal;
     box-sizing: border-box;
-    overflow-y: auto; 
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    overflow-y: auto;
 }
 
-#floatingDiv.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+#floatingDiv,
+#floating3Div {
+    width: 400px;
+    z-index: 2000;
+}
+
+#floating1Div,
+#floating2Div {
+    width: 450px;
+    z-index: 1000;
 }
 
 #floatingDiv::-webkit-scrollbar {
     display: none; 
 }
 
-#floatingDivHeader {
-    width: 100%; 
-    text-align: left;
+#floatingDivHeader,
+#floating1DivHeader,
+#floating2DivHeader,
+#floating3DivHeader {
+    width: 100%;
+    padding: 10px;
     background-color: #2C3E50;
     color: white;
-    padding: 10px; 
-    box-sizing: content-box; 
+    box-sizing: border-box; /* 🔥 FIX */
     margin: 0;
+}
+
+#floatingDivHeader,
+#floating1DivHeader,
+#floating2DivHeader,
+#floating3DivHeader {
+    display: block;
+}
+
+#floating2Div,
+#floating3Div {
+    overflow-x: hidden; /* 🔥 prevents horizontal bleed */
 }
 
 #copiedValues {
@@ -791,39 +833,6 @@ input, select {
     width: calc(100% - 15px); 
     max-width: 100%; 
     color: #555555;
-}
-
-#floating1Div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    border: 2.5px solid #2C3E50;
-    border-radius: 7.5px;
-    background-color: #F5F7FA;
-    padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    width: 450px;
-    font-weight: normal;
-    overflow: hidden;
-    opacity: 0; 
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out; 
-}
-
-#floating1Div.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1); /* Keep centering and zoom effect */
-}
-
-#floating1DivHeader {
-    width: 100%; 
-    text-align: left;
-    background-color: #2C3E50;
-    color: white;
-    padding: 10px 10px 10px 20px; 
-    box-sizing: content-box; 
-    margin: 0;
 }
 
 #sfTaggingValues {
@@ -844,44 +853,16 @@ input, select {
     line-height: 24px;
 }
 
-#floating2Div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    border: 2.5px solid #2C3E50;
-    border-radius: 7.5px;
-    background-color: #F5F7FA;
-    padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    width: 460px;
-    min-height: 15%; 
-    max-height: 95%; 
-    font-weight: normal;
-    box-sizing: border-box;
-    overflow-y: auto; 
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-
-#floating2Div.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+#floating1Div::-webkit-scrollbar {
+    display: none; 
 }
 
 #floating2Div::-webkit-scrollbar {
     display: none; 
 }
 
-#floating2DivHeader {
-    width: 100%;
-    text-align: left;
-    background-color: #2C3E50;
-    color: white;
-    padding: 10px;
-    box-sizing: border-box;
-    margin: 0;
+#floating3Div::-webkit-scrollbar {
+    display: none; 
 }
 
 .form3Div {
@@ -891,7 +872,8 @@ input, select {
     height: auto;
 }
 
-#form3Container {
+#form3Container,
+#form4Container {
     position: relative;
     overflow-y: auto;  
     height: 100%;  
@@ -910,7 +892,6 @@ input, select {
     background-color: #2C3E50;
     margin-top: 10px;
     padding: 0;
-    border-radius: 5px;
 }
 
 label.form3-label {
@@ -922,8 +903,7 @@ label.form3-label {
 
 input.form3-input, select.form3-input {
     width: 57.5%; 
-    border-radius: 0px 5px 5px 0px; 
-}
+} 
 
 .form3DivTextarea {
     display: flex;  
@@ -932,8 +912,7 @@ input.form3-input, select.form3-input {
     justify-content: flex-start;  
     width: 100%;  
     box-sizing: border-box;  
-    border-radius: 5px;
-    border: 2px solid #2C3E50;
+    border: 1px solid #2C3E50;
     background-color: none;
     color: #ffffff;
     padding: 0;
@@ -954,7 +933,6 @@ textarea.form3-textarea {
     margin: 0;  
     box-sizing: border-box; 
     border: none;
-    border-radius: 0 0 5px 5px; 
     line-height: 1.5; 
     resize: none;
     overflow-y: hidden;
@@ -964,7 +942,6 @@ textarea.form3-textarea {
 button.form3-button {
     width: 100%;  
     padding: 0;  
-    border-radius: 5px;  
     color: white;
     cursor: pointer;
     text-align: center;
@@ -990,7 +967,7 @@ button.form3-button {
     height: 55px;
     letter-spacing: 1px;
     z-index: 100;
-    border-top: 2.5px solid #92a6bb;
+    border-top: 2px solid #92a6bb;
 }
 
 .footer-content {
@@ -1114,9 +1091,16 @@ button.form3-button {
     min-width: 172.5px;
 }
 
+/* RIGHT ALIGN (More) */
+.dropdown.align-right .dropdown-content {
+    right: 5px;
+    left: auto;
+}
+
 
 .dropdown-content button {
     display: block;
+    padding: 0;
     width: 100%;
     cursor: pointer;
     margin-top: 2.5px;
@@ -1128,11 +1112,11 @@ button.form3-button {
 
 .dropdown > button.active {
     background-color: #1C86EE;
-    border: solid 2px #1C86EE;
+    border: solid 1px #1C86EE;
 }
 
 button {
-    padding: 0px 20px; 
+    padding: 0px 15px; 
     color: white;
     cursor: pointer;
     text-align: center;
@@ -1140,8 +1124,7 @@ button {
     line-height: 25px; 
     display: block;
     margin: 0 auto;  
-    border: 2px solid #2C3E50;
-    border-radius: 5px;  
+    border: 1px solid #2C3E50;
     background-color: #1E90FF; 
     height: 28px;
     position: relative;
@@ -1166,8 +1149,8 @@ button::after {
 }
 
 button:hover {
-    background-color: #1C86EE;
-    border: solid 2px #1C86EE;
+    background-color: #2C3E50;
+    border: solid 1px #1E90FF;
 }
 
 button:hover::after {
@@ -1200,8 +1183,7 @@ button:active {
     top: 100px;
     left: 50px;
     background-color: #F5F7FA;
-    border: 2.5px solid #2C3E50;
-    border-radius: 10px;
+    border: 1px solid #2C3E50;
     box-shadow:
         0 4px 8px rgba(0, 0, 0, 0.25), 
         0 0 10px rgba(255, 255, 255, 0.5);
@@ -1216,7 +1198,6 @@ button:active {
     color: white;
     font-weight: bold;
     padding: 5px;
-    border-radius: 7px 7px 0 0;
     cursor: grab;
 }
 
@@ -1236,8 +1217,7 @@ button:active {
 
 #ticketTimerReset {
     background-color: #1E90FF;
-    border: solid 2px #2C3E50;
-    border-radius: 5px;
+    border: solid 1px #2C3E50;
     color: white;
     width: 70px;
     cursor: pointer;
@@ -1245,47 +1225,6 @@ button:active {
 
 #ticketTimerReset:hover {
     background-color: #1C86EE; 
-}
-
-/* Endorsement Generated Notes Div */
-#floating3Div {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    border: 2.5px solid #2C3E50;
-    border-radius: 7.5px;
-    background-color: #F5F7FA;
-    padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 2000;
-    width: 460px;
-    min-height: 15%; 
-    max-height: 95%; 
-    font-weight: normal;
-    box-sizing: border-box;
-    overflow-y: auto; 
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-
-#floating3Div.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-#floating3Div::-webkit-scrollbar {
-    display: none; 
-}
-
-#floating3DivHeader {
-    width: 100%;
-    text-align: left;
-    background-color: #2C3E50;
-    color: white;
-    padding: 10px;
-    box-sizing: border-box;
-    margin: 0;
 }
 
 /* FAB panel */
@@ -1346,7 +1285,7 @@ button:active {
     background: #3d4857;
     border-radius: 12px;
     padding: 6px 0;
-    min-width: 180px;
+    width: 300px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
@@ -1393,8 +1332,8 @@ button:active {
 
 /* intro bubble */
 #fabMessage {
-    min-width: 295px;
-    max-width: 375px;
+    min-width: 50px;
+    max-width: 365px;
     background: white;
     padding: 10px 14px;
     border-radius: 10px;
@@ -1433,51 +1372,40 @@ button:active {
 }
 
 /* CUSTOM ALERT */
-.alert-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.4);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 999;
+.alert-box-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: none;
+    z-index: 1000; /* higher than overlay */
+
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* SHOW STATE */
-.alert-overlay.show {
-  display: flex;
-  opacity: 1;
-}
-
-/* HIDE ANIMATION */
-.alert-overlay.hide {
-  opacity: 0;
+.alert-box-container.show {
+    display: block;
+    opacity: 1;
 }
 
 .alert-box {
     display: flex;
     flex-direction: column;
     align-items: stretch; /* 🔥 this is key */
+    font-size: 13.5px;
+    line-height: 1.4;
     background: #fff;
     padding: 10px 25px 15px 25px;
-    border: solid 2px #2C3E50;
-    border-radius: 12px;
+    border: solid 1px #2C3E50;
     text-align: left;
-    width: 350px;
-    max-width: 80%;
+    width: 400px;
+    /* max-width: 90%; */
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     transform: scale(0.9);
     transition: transform 0.3s ease;
     z-index: 9999;
-}
-
-.alert-overlay.show .alert-box {
-  transform: scale(1);
 }
 
 .alert-box p {
@@ -1554,3 +1482,4 @@ button:active {
     margin: 0;          /* cancel global margin */
     margin-top: 5px;
 }
+

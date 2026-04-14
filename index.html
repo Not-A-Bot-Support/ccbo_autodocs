@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Standard Notes Generator V5.0</title>
+    <title>Standard Notes Generator V1.0</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,17 +71,6 @@
                                     <input type="text" id="pldt-user" name="pldtUser" placeholder="t-jdelacruz">
                                 </div>
                             </td>
-                            <!-- <td>
-                                <label for="channel">Channel*</label>
-                                <div class="form1DivInput">
-                                    <select id="channel" name="selectChannel">
-                                        <option value="" disabled selected></option>
-                                        <option value="CDT-CCBO">CDT-CCBO</option>
-                                        <option value="CDT-HOTLINE">CDT-HOTLINE</option>
-                                        <option value="CDT-SOCMED">CDT-SOCMED</option>
-                                    </select>
-                                </div>
-                            </td> -->
                             <td>
                                 <label for="caseOrigin">Channel*</label>
                                 <div class="form1DivInput">
@@ -96,28 +85,6 @@
                                 </div>
                             </td>
                         </tr>
-                        <!-- <tr id="case-origin-row" style="display: none;">
-                            <td colspan="2">
-                                <label>Case Origin*</label>
-                                <div class="form1DivInput radio-group">
-                                    <label class="radio-option">
-                                        <input type="radio" name="selectCaseOrigin" value="Chatbot" required>
-                                        <span>Chatbot</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="selectCaseOrigin" value="Ordertake">
-                                        <span>Ordertake</span>
-                                    </label>
-
-                                    <label class="radio-option">
-                                        <input type="radio" name="selectCaseOrigin" value="Webform">
-                                        <span>Webform</span>
-                                    </label>
-
-                                </div>
-                            </td>
-                        </tr> -->
                         <tr id="case-and-account-header-row" style="display: none;">
                             <th colspan="2">
                                 <div class="form1DivHeader">CASE & ACCOUNT DETAILS</div>
@@ -174,7 +141,7 @@
                                     <select id="lob" name="selectLOB">
                                         <option value="" disabled selected></option>
                                         <option value="NON-TECH">NON-TECH</option>
-                                        <!-- <option value="TECH">TECH</option> -->
+                                        <option value="TECH">TECH</option>
                                     </select>
                                 </div>
                             </td>
@@ -429,7 +396,7 @@
         
     </div>
 
-    <div id="customAlert" class="alert-overlay">
+    <div id="customAlert" class="alert-box-container">
         <div class="alert-box">
             <p id="alertMessage"></p>
             <div class="alert-actions">
@@ -438,7 +405,7 @@
         </div>
     </div>
 
-    <div id="customConfirm1" class="alert-overlay">
+    <div id="customConfirm1" class="alert-box-container">
         <div class="alert-box">
             <p id="confirmMessage1"></p>
             <div class="alert-actions">
@@ -448,7 +415,7 @@
         </div>
     </div>
 
-    <div id="customConfirm2" class="alert-overlay">
+    <div id="customConfirm2" class="alert-box-container">
         <div class="alert-box">
             <p id="confirmMessage2"></p>
             <div class="alert-actions">
@@ -478,7 +445,7 @@
                 </table>
             </div>
             <div class="footer-text">
-                <span id="footerValue">Standard Notes Generator Version 5.0.000000</span>
+                <span id="footerValue">Standard Notes Generator Version 1.0.140426</span>
                 <span>&copy; Developed and designed by: QA Team</span>
             </div>
         </div>
@@ -489,21 +456,6 @@
         <div id="copiedValues"></div>
         <button id="okButton">Close</button>
     </div>
-
-    <div id="floating1Div" style="display: none;">
-        <div id="floating1DivHeader"></div>
-        <div id="sfTaggingValues"></div>
-        <button id="okButton1">Close</button>
-    </div>
-
-    <div id="floating2Div" style="display: none;">
-        <div class="form3Div" id="form3Container"></div>
-    </div>
-
-    <!-- <div id="ticketTimer" class="floating-timer noselect" style="display:none;">
-        <div id="ticketTimerHeader">Ticket Creation Timer</div>
-        <div id="ticketTimerDisplay">00:00:00</div>
-    </div> -->
 
     <br>
 </body>
