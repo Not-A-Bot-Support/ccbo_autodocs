@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Case Origin, Concern Type, and VOC Options
 const LOB_OPTIONS = [
     { value: "", text: ""},
-    { value: "TECH", text: "TECH"},
-    { value: "NON-TECH", text: "NON-TECH" }
+    { value: "NON-TECH", text: "NON-TECH" },
+    { value: "TECH", text: "TECH"}
 ];
 
 const TECH_VOC_ALLOWED = [
@@ -264,15 +264,19 @@ function populateIntentSelect(lobValue, vocValue) {
         }
     } else if (lobValue === "NON-TECH") {
         const group = NON_TECH_GROUP_MAP[vocValue];
-        populateByGroup(group, vocValue);
+        populateByGroup(group, vocValue, lobValue);
     }
 }
 
-function populateByGroup(group, vocValue = null) {
+function populateByGroup(group, vocValue = null, lobValue = null) {
     allIntentChildren.forEach(el => {
         if (el.tagName === "OPTION" && el.dataset.group === group) {
             intentSelect.appendChild(el.cloneNode(true));
         } else if (el.tagName === "OPTGROUP") {
+            if (el.label === "Change Configuration - Data" && lobValue === "NON-TECH") {
+                return;
+            }
+
             let matchingOptions;
             // Special handling for REQUEST + "Change Configuration - Data"
             if (vocValue === "REQUEST" && el.label === "Change Configuration - Data") {
@@ -675,7 +679,6 @@ function initializeVariables() {
         address: q('[name="address"]'),
         landmarks: q('[name="landmarks"]'),
         subject1: q('[name="subject1"]'),
-        resolution: q('[name="resolution"]'),
         paymentChannel: q('[name="paymentChannel"]'),
         personnelType: q('[name="personnelType"]'),
         planDetails: q('[name="planDetails"]'),
@@ -6436,19 +6439,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Defective Modem / Missing Modem",
-                "Defective Splitter / Defective Microfilter",
-                "LOS",
-                "Manual Troubleshooting",
-                "NMS Refresh / Configuration",
-                "No Configuration / Wrong Configuration",
-                "No PON Light",
-                "Self-Restored",
-                "Network / Outage",
-                "Zone"
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -6923,7 +6913,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "issueResolved", "resolution", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -6972,24 +6962,24 @@ function createIntentBasedForm() {
             if (facility.value === "Fiber") {
                 if (selectedValue === "form100_1" || selectedValue === "form100_2" || selectedValue === "form100_3") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["resType", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "option82Config", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "option82Config", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form100_4" || selectedValue === "form100_5") {
-                    showFields(["onuSerialNum", "modemLights", "actualExp", "remarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    showFields(["onuSerialNum", "modemLights", "actualExp", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                     hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "option82Config", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "issueResolved"]);
                 } else {
                     showFields(["onuSerialNum", "modemLights", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "option82Config", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "option82Config", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
             } else if (facility.value === "Fiber - Radius") {
                 if (selectedValue === "form100_1" || selectedValue === "form100_2" || selectedValue === "form100_3") {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form100_4" || selectedValue === "form100_5") {
-                    showFields(["remarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    showFields(["remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                     hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "cvReading", "rtaRequest", "actualExp", "issueResolved"]);
                 } else {
                     showAlert("This form is currently unavailable for customers with Fiber - Radius service.");
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "resolution", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
 
                     const facilityField = document.querySelector('[name="facility"]');
                     if (facilityField) facilityField.value = "";
@@ -6997,10 +6987,10 @@ function createIntentBasedForm() {
                 }
             } else if (facility.value === "Copper VDSL") {
                 showFields(["resType"]);
-                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "resolution", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
                 showFields(["remarks"]);
-                hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "issueResolved", "resolution", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -7011,13 +7001,13 @@ function createIntentBasedForm() {
             if (resType.value === "Yes") {
                 if (selectedValue === "form100_1" || selectedValue === "form100_2" || selectedValue === "form100_3") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form100_4" || selectedValue === "form100_5") {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showAlert("This form is currently unavailable for customers with Fiber - DSL service.");
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "resolution", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "remarks", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
 
                     const resTypeField = document.querySelector('[name="resType"]');
                     if (resTypeField) resTypeField.value = "";
@@ -7025,7 +7015,7 @@ function createIntentBasedForm() {
                 }
             } else {
                 showFields(["remarks"]);
-                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "resolution", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -7034,15 +7024,15 @@ function createIntentBasedForm() {
         outageStatus.addEventListener("change", () => {
             resetAllFields(["calloutAttempt", "facility", "resType", "outageStatus"]);
             if (outageStatus.value === "Yes") {
-                showFields(["outageReference", "pcNumber", "remarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
+                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                 hideSpecificFields(["onuSerialNum", "option82Config", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "issueResolved", "availability", "address", "landmarks"]);
             } else {
                 if (facility.value === "Fiber") {
                     showFields(["onuSerialNum", "modemLights", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "cvReading", "rtaRequest", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "option82Config", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "option82Config", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["onuSerialNum", "modemLights", "cvReading", "rtaRequest", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "option82Config", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "onuRunStats", "rxPower", "vlan", "nmsSkinRemarks", "option82Config", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 
             }
@@ -7062,9 +7052,8 @@ function createIntentBasedForm() {
         const issueResolved = document.querySelector("[name='issueResolved']");
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
@@ -7159,19 +7148,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Defective Cable / Cord",
-                "Defective Telset / Missing Telset",
-                "Manual Troubleshooting",
-                "No Configuration / Wrong Configuration",
-                "Self-Restored",
-                "Network / Outage",
-                "Zone",
-                "Defective Telset",
-                "Defective Modem / Missing Modem",
-                "NMS Configuration" 
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -7398,33 +7374,19 @@ function createIntentBasedForm() {
                 input = document.createElement("select");
                 input.name = field.name;
                 input.className = "form2-input";
+                field.options.forEach((optionText, index)=> {
+                    const option = document.createElement("option");
+                    option.value = optionText;
+                    option.textContent = optionText;
 
-                let optionsToUse = field.options;
-
-                if (field.name === "resolution") {
-                    if (["form101_1", "form101_2", "form101_3", "form101_4"].includes(selectedValue)) {
-                        optionsToUse = field.options.filter((opt, idx) => idx === 0 || (idx >= 1 && idx <= 7));
-                    } else if (["form102_1", "form102_2", "form102_3", "form102_4"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[1], field.options[3], field.options[8]];
-                    } else if (["form103_1", "form103_2", "form103_3", "form103_4", "form103_5"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[2], field.options[3], field.options[4], field.options[9], field.options[10]];
+                    if (index === 0) {
+                        option.disabled = true;
+                        option.selected = true;
+                        option.style.fontStyle = "italic";
                     }
-                }
 
-                optionsToUse.forEach((optionText, index) => {
-                const option = document.createElement("option");
-                option.value = optionText;
-                option.textContent = optionText;
-
-                if (index === 0) {
-                    option.disabled = true;
-                    option.selected = true;
-                    option.style.fontStyle = "italic";
-                }
-
-                input.appendChild(option);
+                    input.appendChild(option);
                 });
-
             } else if (field.type === "textarea") {
                 input = document.createElement("textarea");
                 input.name = field.name;
@@ -7518,7 +7480,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["facility", "resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "remarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount", "resolution"]);
+                hideSpecificFields(["facility", "resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "remarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -7567,26 +7529,26 @@ function createIntentBasedForm() {
             if (facility.value === "Fiber") {
                 if (selectedValue === "form101_1" || selectedValue === "form101_2" || selectedValue === "form101_3" || selectedValue === "form102_1" || selectedValue === "form102_2" || selectedValue === "form102_3") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["resType", "serviceStatus", "services", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "serviceStatus", "services", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form103_1" || selectedValue === "form103_2") {
                     showFields(["serviceStatus", "onuSerialNum", "callType", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "services", "outageStatus", "outageReference", "pcNumber", "modemLights", "fsx1Status", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "services", "outageStatus", "outageReference", "pcNumber", "modemLights", "fsx1Status", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }  else if (selectedValue === "form103_4" || selectedValue === "form103_5") {
                     showFields(["onuSerialNum", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "services", "outageStatus", "outageReference", "pcNumber", "modemLights", "callType", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "dmsVoipServiceStatus", "dmsRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "services", "outageStatus", "outageReference", "pcNumber", "modemLights", "callType", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "dmsVoipServiceStatus", "dmsRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
             } else if (facility.value === "Fiber - Radius") {
                 showFields(["remarks", "issueResolved"]);
-                hideSpecificFields(["resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else if (facility.value === "Copper VDSL") {
                 showFields(["resType"]);
-                hideSpecificFields(["serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "resolution", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
                 showFields(["remarks"]);
-                hideSpecificFields(["resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount", "resolution"]);
+                hideSpecificFields(["resType", "serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -7597,16 +7559,16 @@ function createIntentBasedForm() {
             if (resType.value === "Yes") {
                 if (selectedValue === "form101_1" || selectedValue === "form101_2") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["serviceStatus", "services", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "oltAndOnuConnectionType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["serviceStatus", "services", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "oltAndOnuConnectionType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form101_3") {
                     showFields(["services", "outageStatus"]);
-                    hideSpecificFields(["serviceStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["serviceStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
             } else {
-                showFields(["remarks", "resolution"]);
+                showFields(["remarks"]);
                 hideSpecificFields(["serviceStatus", "services", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
@@ -7618,35 +7580,35 @@ function createIntentBasedForm() {
             if (outageStatus.value === "No" && facility.value === "Fiber") {
                 if (selectedValue === "form101_1" || selectedValue === "form101_2" || selectedValue === "form101_3") {
                     showFields(["onuSerialNum", "modemLights", "oltAndOnuConnectionType", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "callType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "callType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 updateToolLabelVisibility();
             } else if (outageStatus.value === "No" && facility.value === "Copper VDSL") {
                 if (selectedValue === "form101_1" || selectedValue === "form101_2" || selectedValue === "form101_3") {
                     showFields(["onuSerialNum", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "modemLights", "callType", "oltAndOnuConnectionType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "modemLights", "callType", "oltAndOnuConnectionType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 updateToolLabelVisibility();
             } else if (resType.value === "Yes" && services.value === "Voice Only" && outageStatus.value === "No") {
                 if (selectedValue === "form101_3") {
                     showFields(["onuSerialNum", "dmsVoipServiceStatus", "dmsRemarks", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "modemLights", "callType", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "modemLights", "callType", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 updateToolLabelVisibility();
             } else if (resType.value === "Yes" && services.value === "Bundled" && outageStatus.value === "No") {
                 showFields(["onuSerialNum", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "modemLights", "callType", "dmsVoipServiceStatus", "dmsRemarks", "oltAndOnuConnectionType", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
 
                 updateToolLabelVisibility();
             } else {
                 showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
-                hideSpecificFields(["onuSerialNum", "modemLights", "callType", "oltAndOnuConnectionType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "issueResolved", "resolution", "availability", "address", "landmarks"]);
+                hideSpecificFields(["onuSerialNum", "modemLights", "callType", "oltAndOnuConnectionType", "dmsVoipServiceStatus", "dmsRemarks", "fsx1Status", "routingIndex", "callSource", "ldnSet", "nmsSkinRemarks", "actualExp", "issueResolved", "availability", "address", "landmarks"]);
                 updateToolLabelVisibility();
             }
 
@@ -7676,9 +7638,8 @@ function createIntentBasedForm() {
         const issueResolved = document.querySelector("[name='issueResolved']");
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
@@ -7821,22 +7782,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Tested Ok",
-                "Cannot Browse",
-                "Defective Mesh",
-                "Defective Modem / Missing Modem",
-                "Manual Troubleshooting",
-                "Mesh Configuration",
-                "Mismatch Option 82 / Service ID",
-                "NMS Refresh / Configuration",
-                "No Configuration / Wrong Configuration",
-                "No or Blinking DSL Light",
-                "Self-Restored",
-                "Zone",
-                "Network / Outage"
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -8332,7 +8277,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -8381,27 +8326,27 @@ function createIntentBasedForm() {
             if (facility.value === "Fiber") {
                 if (selectedValue === "form500_1") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["resType", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form500_2") {
                     showFields(["nmsSkinRemarks", "dmsRemarks", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "connectionMethod", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "connectionMethod", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["meshtype", "meshOwnership", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
 
                 updateToolLabelVisibility();
             } else if (facility.value === "Fiber - Radius") {
                 if (selectedValue === "form500_1") {
                     showFields(["connectionMethod", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "meshtype", "meshOwnership", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "meshtype", "meshOwnership", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form500_3" || selectedValue === "form500_4") {
                     showFields(["meshtype", "meshOwnership", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showAlert("This form is currently unavailable for customers with Fiber - Radius service.");
                     resetAllFields([]);
-                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
 
                     const facilityField = document.querySelector('[name="facility"]');
                     if (facilityField) facilityField.value = "";
@@ -8411,10 +8356,10 @@ function createIntentBasedForm() {
                 updateToolLabelVisibility();
             } else if (facility.value === "Copper VDSL") {
                 showFields(["resType"]);
-                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
                 showFields(["remarks"]);
-                hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -8425,19 +8370,19 @@ function createIntentBasedForm() {
             if (resType.value === "Yes") {
                 if (selectedValue=== "form500_1") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form500_2") {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["meshtype", "meshOwnership", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 
                 updateToolLabelVisibility();
             } else {
                 showFields(["remarks", "issueResolved"]);
-                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "meshtype", "meshOwnership", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
 
             updateToolLabelVisibility();
@@ -8448,12 +8393,12 @@ function createIntentBasedForm() {
             resetAllFields(["calloutAttempt", "facility", "resType", "outageStatus"]);
             if (selectedValue === "form500_1" && facility.value === "Fiber" && outageStatus.value === "No") {
                 showFields(["equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "option82Config", "dmsWifiState", "dmsLanPortStatus", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "option82Config", "dmsWifiState", "dmsLanPortStatus", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else if (selectedValue === "form500_1" && facility.value === "Copper VDSL" && outageStatus.value === "No") {
                 showFields(["onuSerialNum", "intLightStatus", "wanLightStatus", "connectionMethod", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "option82Config", "onuRunStats", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount", "resolution"]);
+                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                 hideSpecificFields(["equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "intLightStatus", "wanLightStatus", "onuRunStats", "option82Config", "rxPower", "vlan", "ipAddress", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "dmsInternetStatus", "onuModel", "dmsWifiState", "dmsLanPortStatus", "dmsSelfHeal", "dmsRemarks", "connectionMethod", "actualExp", "issueResolved", "availability", "address", "landmarks"]);
             }
             updateToolLabelVisibility();
@@ -8531,25 +8476,12 @@ function createIntentBasedForm() {
         const issueResolved = document.querySelector("[name='issueResolved']");
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount", "resolution"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
-
-        const resolution = document.querySelector("[name='resolution']");
-        function testedOkReso() {
-            if (resolution.value === "Tested Ok") {
-                hideSpecificFields(["availability", "address", "landmarks"]);
-            } else {
-                showFields(["availability", "address", "landmarks"]);
-            }
-            updateToolLabelVisibility();
-        }
-
-        resolution.addEventListener("change", testedOkReso);
 
         updateToolLabelVisibility();
     } else if (sicForms.includes(selectedValue)) { 
@@ -8628,18 +8560,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Tested Ok",
-                "Failed RX",
-                "High Latency / Ping",
-                "Manual Troubleshooting",
-                "Mismatch Option 82 / Service ID",
-                "NMS Refresh / Configuration",
-                "Slow Browsing",
-                "Zone",
-                "Network / Outage"
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -9132,7 +9052,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "planDetails", "onuModel", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "cvReading", "rtaRequest", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "planDetails", "onuModel", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "cvReading", "rtaRequest", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -9180,17 +9100,17 @@ function createIntentBasedForm() {
             resetAllFields(["calloutAttempt", "facility"]);
             if (facility.value === "Fiber") {
                 showFields(["outageStatus"]);
-                hideSpecificFields(["resType", "planDetails", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "planDetails", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 updateToolLabelVisibility(); 
             } else if (facility.value === "Fiber - Radius") {
                 showFields(["planDetails", "connectionMethod", "pingTestResult", "speedTestResult", "remarks", "issueResolved"]);
-                hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else if (facility.value === "Copper VDSL") {
                 showFields(["resType"]);
-                hideSpecificFields(["planDetails", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["planDetails", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
                 showFields(["remarks"]);
-                hideSpecificFields(["resType", "planDetails", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp", "resolution" ,"issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "planDetails", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "investigation1", "investigation2", "investigation3", "investigation4", "actualExp" ,"issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility(); 
         });
@@ -9200,10 +9120,10 @@ function createIntentBasedForm() {
             resetAllFields(["calloutAttempt", "facility", "resType"]);
             if (resType.value === "Yes") {
                 showFields(["outageStatus"]);
-                hideSpecificFields(["planDetails", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["planDetails", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
                 showFields(["remarks"]);
-                hideSpecificFields(["planDetails", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["planDetails", "outageStatus", "outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility(); 
         });
@@ -9212,16 +9132,16 @@ function createIntentBasedForm() {
         outageStatus.addEventListener("change", () => {
             resetAllFields(["calloutAttempt", "facility", "resType", "outageStatus"]);
             if (outageStatus.value === "Yes") {
-                showFields(["outageReference", "pcNumber", "remarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
+                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                 hideSpecificFields(["planDetails", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "deviceBrandAndModel", "pingTestResult", "speedTestResult", "actualExp", "issueResolved", "availability", "address", "landmarks"]);
             } else {
                 if (facility.value === "Fiber") {
                     showFields(["planDetails", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "connectionMethod", "pingTestResult", "speedTestResult", "actualExp", "remarks", "issueResolved"]);
-                    hideSpecificFields(["resolution", "investigation1", "investigation2", "investigation3", "investigation4", "outageReference", "pcNumber", "deviceBrandAndModel", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "outageReference", "pcNumber", "deviceBrandAndModel", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
 
                 } else {
                     showFields(["planDetails", "connectionMethod", "pingTestResult", "speedTestResult", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "deviceBrandAndModel", "actualExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);   
+                    hideSpecificFields(["outageReference", "pcNumber", "onuSerialNum", "rxPower", "option82Config", "saaaBandwidthCode", "connectedDevices", "nmsSkinRemarks", "cvReading", "rtaRequest", "onuModel", "dmsInternetStatus", "deviceWifiBand", "bandsteering", "dmsRemarks", "deviceBrandAndModel", "actualExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);   
                 }
                 updateToolLabelVisibility(); 
             }
@@ -9241,25 +9161,12 @@ function createIntentBasedForm() {
         const issueResolved = document.querySelector("[name='issueResolved']");
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
-
-        const resolution = document.querySelector("[name='resolution']");
-        function testedOkReso() {
-            if (resolution.value === "Tested Ok") {
-                hideSpecificFields(["availability", "address", "landmarks"]);
-            } else {
-                showFields(["availability", "address", "landmarks"]);
-            }
-            updateToolLabelVisibility();
-        }
-
-        resolution.addEventListener("change", testedOkReso);
 
         updateToolLabelVisibility();
     } else if (selectedValue === "form501_5" || selectedValue === "form501_6") { 
@@ -9305,14 +9212,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Webpage Not Loading",
-                "Failed RX",
-                "High Latency / Ping",
-                "Network / Outage",
-                "Zone"
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -9811,7 +9710,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "cvReading", "rtaRequest", "rxPower", "specificTimeframe", "pingTestResult", "gameNameAndServer", "gameServerIP", "pingTestResult2", "traceroutePLDT", "tracerouteExt", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "onuSerialNum", "cvReading", "rtaRequest", "rxPower", "specificTimeframe", "pingTestResult", "gameNameAndServer", "gameServerIP", "pingTestResult2", "traceroutePLDT", "tracerouteExt", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -9858,11 +9757,11 @@ function createIntentBasedForm() {
         outageStatus.addEventListener("change", () => {
             resetAllFields(["calloutAttempt", "outageStatus"]);
             if (outageStatus.value === "Yes") {
-                showFields(["outageReference", "pcNumber", "remarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
+                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                 hideSpecificFields(["onuSerialNum", "rxPower", "cvReading", "rtaRequest", "specificTimeframe", "pingTestResult", "gameNameAndServer", "gameServerIP", "pingTestResult2", "traceroutePLDT", "tracerouteExt", "issueResolved", "availability", "address", "landmarks"]);
             } else if (outageStatus.value === "No") {
                 showFields(["onuSerialNum", "rxPower", "cvReading", "rtaRequest", "specificTimeframe", "pingTestResult", "gameNameAndServer", "gameServerIP", "pingTestResult2", "traceroutePLDT", "tracerouteExt", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -9870,9 +9769,8 @@ function createIntentBasedForm() {
         const issueResolved = document.querySelector("[name='issueResolved']");
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount", "resolution"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility(); 
@@ -9960,13 +9858,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Tested Ok",
-                "Manual Troubleshooting",
-                "Request Timed Out",
-                "Webpage Not Loading"
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -10327,7 +10218,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "resolution", "testedOk", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["facility", "resType", "outageStatus", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "testedOk", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -10375,19 +10266,18 @@ function createIntentBasedForm() {
         const outageStatus = document.querySelector("[name='outageStatus']");
         const itSupport = document.querySelector("[name='itSupport']");
         const issueResolved = document.querySelector("[name='issueResolved']");
-        const resolution = document.querySelector("[name='resolution']");
 
         facility.addEventListener("change", () => {
             resetAllFields(["calloutAttempt", "facility"]);
             if (facility.value === "Copper VDSL") {
                 showFields(["resType"]);
-                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else if (facility.value === "Copper HDSL/NGN") {
-                showFields(["remarks", "resolution"]);
+                showFields(["remarks"]);
                 hideSpecificFields(["resType", "outageStatus", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
                 showFields(["outageStatus"]);
-                hideSpecificFields(["resType", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["resType", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -10396,9 +10286,9 @@ function createIntentBasedForm() {
             resetAllFields(["calloutAttempt", "facility", "resType"]);
             if (resType.value === "Yes") {
                 showFields(["outageStatus"]);
-                hideSpecificFields(["outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["remarks", "resolution"]);
+                showFields(["remarks"]);
                 hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
 
@@ -10408,14 +10298,14 @@ function createIntentBasedForm() {
         outageStatus.addEventListener("change", () => {
             resetAllFields(["calloutAttempt", "facility", "resType", "outageStatus"]);
             if (outageStatus.value === "Yes") {
-                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount", "resolution"]);
+                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                 hideSpecificFields(["rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "itRemarks", "issueResolved", "availability", "address", "landmarks"]);
             } else if (facility.value === "Fiber" && outageStatus.value === "No") {
                 showFields(["rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "itRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "itRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else if ((facility.value === "Fiber - Radius" || facility.value === "Copper VDSL") && outageStatus.value === "No") {
                 showFields(["websiteURL", "errMsg", "otherDevice", "vpnBlocking", "vpnRequired", "otherISP", "itSupport", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "itRemarks", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "rxPower", "ipAddress", "dmsInternetStatus", "connectedDevices", "itRemarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -10430,24 +10320,12 @@ function createIntentBasedForm() {
     
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount", "resolution"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["testedOk", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
-
-        function testedOkReso() {
-            if (resolution.value === "Tested Ok" || testedOk.value === "Yes") {
-                hideSpecificFields(["availability", "address", "landmarks"]);
-            } else {
-                showFields(["availability", "address", "landmarks"]);
-            }
-            updateToolLabelVisibility();
-        }
-
-        resolution.addEventListener("change", testedOkReso);
 
         updateToolLabelVisibility();
     } else if (iptvForms.includes(selectedValue)) { 
@@ -10532,15 +10410,6 @@ function createIntentBasedForm() {
                 "No - Customer Declined Further Assistance",
                 "No - System Ended Chat"
             ] },
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Cignal Retracking",
-                "Defective Cignal Accessories / Missing Cignal Accessories",
-                "Defective Set Top Box / Missing Set Top Box",
-                "Manual Troubleshooting",
-                "Network Configuration",
-                "Defective Remote Control"
-            ]},
             // CEP Investigation Tagging
             { label: "Investigation 1", type: "select", name: "investigation1", options: [
                 "— Modem Light Status —",
@@ -10862,33 +10731,19 @@ function createIntentBasedForm() {
                 input = document.createElement("select");
                 input.name = field.name;
                 input.className = "form2-input";
+                field.options.forEach((optionText, index)=> {
+                    const option = document.createElement("option");
+                    option.value = optionText;
+                    option.textContent = optionText;
 
-                let optionsToUse = field.options;
-
-                if (field.name === "resolution") {
-                    if (["form510_1", "form510_2", "form510_3", "form510_4", "form510_5", "form510_6", "form510_7", "form510_8"].includes(selectedValue)) {
-                        optionsToUse = field.options.filter((opt, idx) => idx === 0 || (idx >= 1 && idx <= 5));
-                    } else if (["form511_1", "form511_2", "form511_3", "form511_4", "form511_5"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[1], field.options[4]];
-                    } else if (["form512_1", "form512_2", "form512_3"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[1], field.options[4], field.options[6]];
+                    if (index === 0) {
+                        option.disabled = true;
+                        option.selected = true;
+                        option.style.fontStyle = "italic";
                     }
-                }
 
-                optionsToUse.forEach((optionText, index) => {
-                const option = document.createElement("option");
-                option.value = optionText;
-                option.textContent = optionText;
-
-                if (index === 0) {
-                    option.disabled = true;
-                    option.selected = true;
-                    option.style.fontStyle = "italic";
-                }
-
-                input.appendChild(option);
+                    input.appendChild(option);
                 });
-
             } else if (field.type === "textarea") {
                 input = document.createElement("textarea");
                 input.name = field.name;
@@ -10974,7 +10829,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["accountType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["accountType", "outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -11030,28 +10885,28 @@ function createIntentBasedForm() {
             if (accountType.value === "PLDT") {
                 if (selectedValue === "form510_1" || selectedValue === "form510_2") {
                     showFields(["outageStatus"]);
-                    hideSpecificFields(["outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "remarks", "issueResolved", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "remarks", "issueResolved", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form511_1" || selectedValue === "form511_2" || selectedValue === "form511_3" || selectedValue === "form511_4" || selectedValue === "form511_5") {
                     showFields(["rxPower", "req4retracking", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form512_1") {
                     showFields(["req4retracking", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else if (selectedValue === "form510_7") {
-                    showFields(["stbID", "smartCardID", "stbIpAddress", "tsMulticastAddress", "exactExp", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount", "resolution"]);
+                    showFields(["stbID", "smartCardID", "stbIpAddress", "tsMulticastAddress", "exactExp", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                     hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "cignalPlan", "issueResolved", "availability", "address", "landmarks"]);
                 } else {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 updateToolLabelVisibility();
             } else if (accountType.value === "RADIUS") {
                 if (selectedValue === "form510_1" || selectedValue === "form510_2" || selectedValue === "form511_1" || selectedValue === "form511_2" || selectedValue === "form511_3" || selectedValue === "form511_4" || selectedValue === "form511_5" || selectedValue === "form512_1") {
                     showFields(["req4retracking", "remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 } else {
                     showFields(["remarks", "issueResolved"]);
-                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                    hideSpecificFields(["outageStatus", "outageReference", "pcNumber", "equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
                 }
                 updateToolLabelVisibility();
             }
@@ -11060,11 +10915,11 @@ function createIntentBasedForm() {
         outageStatus.addEventListener("change", () => {
             resetAllFields(["calloutAttempt", "accountType", "outageStatus"]);
             if (outageStatus.value === "Yes") {
-                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount", "resolution"]);
+                showFields(["outageReference", "pcNumber", "remarks", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "rptCount"]);
                 hideSpecificFields(["equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "exactExp", "issueResolved", "availability", "address", "landmarks"]);
             } else {
                 showFields(["equipmentBrand", "modemBrand", "onuConnectionType", "onuSerialNum", "onuRunStats", "rxPower", "nmsSkinRemarks", "dmsLan4Status", "dmsRemarks", "req4retracking", "exactExp", "remarks", "issueResolved"]);
-                hideSpecificFields(["outageReference", "pcNumber", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "resolution", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
+                hideSpecificFields(["outageReference", "pcNumber", "wanName_3", "srvcType_3", "connType_3", "vlan_3", "stbID", "smartCardID", "cignalPlan", "stbIpAddress", "tsMulticastAddress", "investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
         });
@@ -11134,9 +10989,8 @@ function createIntentBasedForm() {
 
         issueResolved.addEventListener("change", () => {
             if (issueResolved.selectedIndex === 2) {
-                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount", "resolution"]);
+                showFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             } else {
-                showFields(["resolution"]);
                 hideSpecificFields(["investigation1", "investigation2", "investigation3", "investigation4", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "rptCount"]);
             }
             updateToolLabelVisibility();
@@ -12023,12 +11877,6 @@ function createIntentBasedForm() {
                 "Request Modem/ONU GUI Access [InterOP]"
             ]},
             { label: "Actions Taken/ Troubleshooting/ Remarks", type: "textarea", name: "remarks", placeholder: "Ensure that all actions performed in each tool are properly documented. Avoid using generic notations such as “ACK CX”,“PROVIDE EMPATHY”, “CONDUCT VA”, or “CONDUCT BTS”. You may also include any SNOW or E-Solve tickets raised for tool-related issues or latency."},
-            { label: "FLM Findings / Resolution", type: "select", name: "resolution", options: [
-                "",
-                "Defective Modem",
-                "Manual Troubleshooting",
-                "NMS Configuration",
-            ]},
             { label: "Issue Resolved? (Y/N)", type: "select", name: "issueResolved", options: [
                 "", 
                 "Yes", 
@@ -12200,24 +12048,7 @@ function createIntentBasedForm() {
                 input = document.createElement("select");
                 input.name = field.name;
                 input.className = "form2-input";
-                
-                let optionsToUse = field.options;
-
-                if (field.name === "resolution") {
-                    if (["form300_1"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[2], field.options[3]];
-                    } else if (["form300_2"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[1], field.options[2], field.options[3]];
-                    } else if (["form300_3"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[3]];
-                    } else if (["form300_4", "form300_5", "form300_7", "form300_8"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[1], field.options[3]];
-                    } else if (["form300_6"].includes(selectedValue)) {
-                        optionsToUse = [field.options[0], field.options[1], field.options[3]];
-                    }
-                }
-
-                optionsToUse.forEach((optionText, index) => {
+                field.options.forEach((optionText, index)=> {
                     const option = document.createElement("option");
                     option.value = optionText;
                     option.textContent = optionText;
@@ -12316,7 +12147,7 @@ function createIntentBasedForm() {
                 hideOutboundFields();
             } else {
                 showOutboundFields();
-                hideSpecificFields(["accountType", "custAuth", "equipmentBrand", "modemBrand", "onuConnectionType", "lanPortNum", "dmsLanPortStatus", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "resolution", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
+                hideSpecificFields(["accountType", "custAuth", "equipmentBrand", "modemBrand", "onuConnectionType", "lanPortNum", "dmsLanPortStatus", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "issueResolved", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
             }
             updateToolLabelVisibility();
             renderButtons();
@@ -12370,20 +12201,20 @@ function createIntentBasedForm() {
 
             if (custAuth.value === "Passed" && accountType.value === "PLDT") {
                 if (selectedValue === "form300_1") {
-                    showFields(["equipmentBrand", "modemBrand", "onuConnectionType", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "issueResolved", "resolution"]);
+                    showFields(["equipmentBrand", "modemBrand", "onuConnectionType", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "issueResolved"]);
                     hideSpecificFields(["cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
 
                     updateToolLabelVisibility();
                 } else if (["form300_2", "form300_3", "form300_4", "form300_5"].includes(selectedValue)) {
-                    showFields(["equipmentBrand", "modemBrand", "onuConnectionType", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "resolution"]);  
+                    showFields(["equipmentBrand", "modemBrand", "onuConnectionType", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);  
 
                     updateToolLabelVisibility();
                 } else if (selectedValue === "form300_6") {
-                    showFields(["lanPortNum", "dmsLanPortStatus", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "resolution"]);    
+                    showFields(["lanPortNum", "dmsLanPortStatus", "investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);    
                     
                     updateToolLabelVisibility();
                 } else {
-                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "resolution"]);
+                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
 
                     updateToolLabelVisibility();
                 }
@@ -12391,22 +12222,22 @@ function createIntentBasedForm() {
                 updateToolLabelVisibility();
             } else if (custAuth.value === "Passed" && accountType.value === "RADIUS") {
                 if (selectedValue === "form300_1") {
-                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "issueResolved", "resolution"]);
+                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "issueResolved"]);
                     hideSpecificFields(["equipmentBrand", "modemBrand", "onuConnectionType", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
 
                     updateToolLabelVisibility();
                 } else if (["form300_2", "form300_3", "form300_4", "form300_5"].includes(selectedValue)) {
-                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "resolution"]);
+                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
                     hideSpecificFields(["equipmentBrand", "modemBrand", "onuConnectionType"]);
 
                     updateToolLabelVisibility();
                 } else if (selectedValue === "form300_6") {
-                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "resolution"]);
+                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
                     hideSpecificFields(["lanPortNum", "dmsLanPortStatus"]);
 
                     updateToolLabelVisibility();
                 } else {
-                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks", "resolution"]);
+                    showFields(["investigation1", "investigation2", "investigation3", "investigation4", "remarks", "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"]);
 
                     updateToolLabelVisibility();
                 }
@@ -12415,7 +12246,7 @@ function createIntentBasedForm() {
                 hideSpecificFields([
                     "equipmentBrand", "modemBrand", "onuConnectionType", "lanPortNum", "dmsLanPortStatus",
                     "investigation1", "investigation2", "investigation3", "investigation4", "issueResolved",
-                    "cepCaseNumber", "sla", "resolution", "contactName", "cbr", "availability", "address", "landmarks"
+                    "cepCaseNumber", "sla", "contactName", "cbr", "availability", "address", "landmarks"
               ]);
                 updateToolLabelVisibility();
             }
@@ -13001,9 +12832,8 @@ function outboundDetailsForm() {
         floating1Div.classList.remove("show");
         floating1Div.classList.add("hide");
 
-        hideOverlay();
-
         setTimeout(() => {
+            hideOverlay();
             floating1Div.style.display = "none";
             floating1Div.classList.remove("hide");
         }, 300);
@@ -13629,8 +13459,6 @@ function showFuseSfNotesFloatingDiv(concernCopiedText, actionsTakenCopiedText, o
 
         floatingDiv.classList.remove("show");
         floatingDiv.classList.add("hide");
-
-        // hideOverlay();
 
         setTimeout(() => {
             floatingDiv.style.display = "none";
@@ -14398,7 +14226,6 @@ function cepCaseDescription(showAddlDetails = true) {
 
     const selectedValue = vars.selectedIntent;
     const selectedIntent = document.querySelector("#selectIntent")?.value.trim() || "";
-    const reso = document.querySelector('[name="resolution"]')?.value.trim() || "";
     const testedOk = document.querySelector('[name="testedOk"]')?.value.trim() || "";
     const selectedOption = document.querySelector(`#selectIntent option[value="${selectedValue}"]`);
     const investigation3Index = document.querySelector('[name="investigation3"]');
@@ -14978,9 +14805,8 @@ function showCepFloatingDiv(labels, textToCopy) {
         floatingDiv.classList.remove("show");
         floatingDiv.classList.add("hide");
 
-        hideOverlay();
-
         setTimeout(() => {
+            hideOverlay();
             floatingDiv.style.display = "none";
 
             // Reset state for next open
@@ -15237,8 +15063,8 @@ function saveFormData() {
     const uniqueKey = (caseOrigin === 'ORDERTAKE' || !sfCaseNumber)
         ? fallbackKey
         : sfCaseNumber;
-    const intentSelect = document.querySelector('[name="selectIntentForms"]');
 
+    const intentSelect = document.querySelector('[name="selectIntentForms"]');
     const intentText = intentSelect
         ? intentSelect.options[intentSelect.selectedIndex]?.text || ""
         : "";
@@ -15768,9 +15594,44 @@ Array.from(container.children).forEach(child => resizeObserver.observe(child));
 updateScrollbar();
 
 // Updates Container
-function renderUpdates(containerId, instructions, versions) {
+function renderUpdates(containerId, introduction, instructions, versions) {
     const container = document.getElementById(containerId);
     if (!container) return console.error(`Container with ID '${containerId}' not found.`);
+
+    // --- Introduction Section ---
+    introduction.forEach(({ version, updates }) => {
+        const introductionDiv = document.createElement("div");
+        introductionDiv.classList.add("updateItem");
+
+        // clickable title
+        const introductionTitle = document.createElement("h3");
+        introductionTitle.classList.add("updateTitle");
+        introductionTitle.textContent = version || "CCBO Standard Notes Generator (Autodocs) V1.0";
+
+        // collapsible content
+        const introductionContent = document.createElement("div");
+        introductionContent.classList.add("updateContent");
+
+        updates.forEach(section => {
+            const sectionDiv = document.createElement("div");
+
+            sectionDiv.innerHTML = `
+                <strong>${section.title}</strong>
+                <ul>${section.items.map(i => `<li>${i}</li>`).join("")}</ul>
+            `;
+
+            introductionContent.appendChild(sectionDiv);
+        });
+
+        // toggle behavior
+        introductionTitle.addEventListener("click", () => {
+            introductionDiv.classList.toggle("active");
+        });
+
+        introductionDiv.appendChild(introductionTitle);
+        introductionDiv.appendChild(introductionContent);
+        container.appendChild(introductionDiv);
+    });
 
     // --- Instructions Section ---
     const instructionsDiv = document.createElement("div");
@@ -15819,19 +15680,9 @@ function renderUpdates(containerId, instructions, versions) {
     });
 }
 
-const instructions = [
-    "Open the tool using the provided link or through smart assistant (Saya). Avoid using the browser's ‘Duplicate Tab’ to ensure the DOM scripts load properly.",
-    "To ensure data accuracy, delete any previously saved records on this workstation before saving new ones.",
-    "Always utilize the LIT365 work instructions to ensure accurate, consistent, and up-to-date handling of every intent. These guidelines outline the correct process flow and required checks, so make sure to utilize them before completing any action.",
-    "Fill out all required fields.",
-    "If a field is not required (e.g. L2 fields), leave it blank. Avoid entering 'NA' or any unnecessary details.",
-    "Ensure that the information is accurate.",
-    "Review your inputs before generating the notes."
-];
-
-const versions = [
+const introduction = [
     {
-        version: "CCBO Standard Notes Generator (Autodocs) V1.0",
+        version: "CCBO Standard Notes Generator (Autodocs) V1",
         updates: [
             { title: "Introducing Autodocs!", items: [
                 "Where consistency meets efficiency. ",
@@ -15862,7 +15713,42 @@ const versions = [
     }
 ];
 
-renderUpdates("updatesContainer", instructions, versions);
+const instructions = [
+    "Open the tool using the provided link or through smart assistant (Saya). Avoid using the browser's ‘Duplicate Tab’ to ensure the DOM scripts load properly.",
+    "To ensure data accuracy, delete any previously saved records on this workstation before saving new ones.",
+    "Always utilize the LIT365 work instructions to ensure accurate, consistent, and up-to-date handling of every intent. These guidelines outline the correct process flow and required checks, so make sure to utilize them before completing any action.",
+    "Fill out all required fields.",
+    "If a field is not required (e.g. L2 fields), leave it blank. Avoid entering 'NA' or any unnecessary details.",
+    "Ensure that the information is accurate.",
+    "Review your inputs before generating the notes."
+];
+
+const versions = [
+    {
+        version: "V1.0.140426 (Beta)",
+        updates: [
+            {
+                title: "Beta Testing Phase",
+                items: [
+                    "This version is currently in beta testing.",
+                    "Features and functionality may still be refined based on feedback.",
+                    "Users may encounter minor issues or inconsistencies during use.",
+                    "Please report any bugs, errors, or suggestions for improvement.",
+                    "Your feedback is valuable in helping improve stability, usability, and overall performance before full release."
+                ]
+            },
+            {
+                title: "Initial Release",
+                items: [
+                    "First release of the tool.",
+                    "Core features are now available for testing and evaluation."
+                ]
+            }
+        ]
+    }
+];
+
+renderUpdates("updatesContainer", introduction, instructions, versions);
 
 // FAB MENU ELEMENT REFERENCES
 const panel = document.getElementById("floatingPanel");
@@ -16394,6 +16280,8 @@ function showAlert(message) {
     const messageBox = document.getElementById("alertMessage");
     const okBtn = document.getElementById("alertOkBtn");
 
+    showOverlay();
+
     messageBox.textContent = message;
 
     alertBox.style.display = "block";
@@ -16410,6 +16298,7 @@ function showAlert(message) {
 
         setTimeout(() => {
             alertBox.style.display = "none";
+            hideOverlay();
         }, 300);
     };
 
@@ -16425,6 +16314,8 @@ function showConfirm1(message) {
     const okBtn = confirmBox.querySelector("#confirmDelete");
     const cancelBtn = confirmBox.querySelector("#confirmKeep");
 
+    showOverlay();
+
     messageBox.textContent = message;
 
     confirmBox.style.display = "block";
@@ -16437,16 +16328,17 @@ function showConfirm1(message) {
     });
 
     const cleanup = (result) => {
-      confirmBox.classList.remove("show");
+        confirmBox.classList.remove("show");
 
-      setTimeout(() => {
-        confirmBox.style.display = "none";
+        setTimeout(() => {
+            confirmBox.style.display = "none";
+            hideOverlay();
 
-        okBtn.onclick = null;
-        cancelBtn.onclick = null;
+            okBtn.onclick = null;
+            cancelBtn.onclick = null;
 
-        resolve(result);
-      }, 300);
+            resolve(result);
+        }, 300);
     };
 
     okBtn.onclick = () => cleanup(true);
@@ -16461,6 +16353,8 @@ function showConfirm2(message) {
     const messageBox = confirmBox.querySelector("#confirmMessage2");
     const okBtn = confirmBox.querySelector("#confirmOk");
     const cancelBtn = confirmBox.querySelector("#confirmCancel");
+
+    showOverlay();
 
     messageBox.textContent = message;
 
@@ -16479,6 +16373,7 @@ function showConfirm2(message) {
 
         setTimeout(() => {
             confirmBox.style.display = "none";
+            hideOverlay();
 
             resolve(result);
         }, 300);
