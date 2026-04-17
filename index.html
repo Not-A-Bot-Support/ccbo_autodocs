@@ -139,9 +139,6 @@
                                 <label for="lob">Concern Type*</label>
                                 <div class="form1DivInput">
                                     <select id="lob" name="selectLOB">
-                                        <!-- <option value="" disabled selected></option>
-                                        <option value="NON-TECH">NON-TECH</option>
-                                        <option value="TECH">TECH</option> -->
                                     </select>
                                 </div>
                             </td>
@@ -396,37 +393,52 @@
         
     </div>
 
-    <div id="customAlert" class="alert-box-container">
-        <div class="alert-box">
-            <p id="alertMessage"></p>
-            <div class="alert-actions">
+    <div id="customAlert" class="alert-overlay">
+        <div class="alert-box custom-style">
+            <div class="alert-content">
+                <p id="alertMessage"></p>
+            </div>
+
+            <div class="alert-footer single">
                 <button id="alertOkBtn">OK</button>
             </div>
         </div>
     </div>
 
-    <div id="customConfirm1" class="alert-box-container">
-        <div class="alert-box">
-            <p id="confirmMessage1"></p>
-            <div class="alert-actions">
-                <button id="confirmKeep">Keep</button>
-                <button id="confirmDelete">Delete</button>
+    <div id="customConfirm1" class="alert-overlay">
+        <div class="alert-box custom-style">            
+            <div class="alert-content">
+                <p id="confirmMessage1"></p>
+            </div>
+
+            <div class="alert-footer-table">
+                <table>
+                    <tr>
+                    <td><button id="confirmKeep">Keep</button></td>
+                    <td><button id="confirmDelete">Delete</button></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
 
-    <div id="customConfirm2" class="alert-box-container">
-        <div class="alert-box">
-            <p id="confirmMessage2"></p>
-            <div class="alert-actions">
-                <button id="confirmOk">OK</button>
-                <button id="confirmCancel">Cancel</button>
+    <div id="customConfirm2" class="alert-overlay">
+        <div class="alert-box custom-style">            
+            <div class="alert-content">
+                <p id="confirmMessage2"></p>
+            </div>
+
+            <div class="alert-footer-table">
+                <table>
+                    <tr>
+                    <td><button id="confirmOk">OK</button></td>
+                    <td><button id="confirmCancel">Cancel</button></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
 
-    
-    
     <div class="footer">
         <div class="footer-content">
             <div class="timer">

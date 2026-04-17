@@ -223,7 +223,6 @@ header {
 #updatesContainer {
   background-color: #f4f6f8;
   border: 1px solid #ccc;
-  /* padding: 10px 15px; */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   line-height: 1.4;
 }
@@ -1372,40 +1371,60 @@ button:active {
 }
 
 /* CUSTOM ALERT */
-.alert-box-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    display: none;
-    z-index: 1000; /* higher than overlay */
-
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 999;
 }
 
-.alert-box-container.show {
-    display: block;
-    opacity: 1;
+/* SHOW STATE */
+.alert-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* HIDE ANIMATION */
+.alert-overlay.hide {
+  opacity: 0;
+}
+
+/* TOP CONTENT */
+.alert-content {
+  padding: 20px 20px 15px;
+  text-align: center;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .alert-box {
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* 🔥 this is key */
-    font-size: 13.5px;
-    line-height: 1.4;
+    align-items: stretch;
     background: #fff;
     padding: 10px 25px 15px 25px;
     border: solid 1px #2C3E50;
     text-align: left;
-    width: 400px;
-    /* max-width: 90%; */
+    width: 350px;
+    max-width: 80%;
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     transform: scale(0.9);
     transition: transform 0.3s ease;
     z-index: 9999;
+}
+
+.alert-overlay.show .alert-box {
+  transform: scale(1);
 }
 
 .alert-box p {
@@ -1431,20 +1450,71 @@ button:active {
   animation: fadeOut 0.2s ease forwards;
 }
 
-.alert-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
 .alert-actions button {
   margin: 0;
 }
 
-#alertOkBtn {
-    width: 75px;
-    margin: 0;
-    align-self: flex-end;
+/* BOX BASE */
+.alert-box.custom-style {
+  padding: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 300px;
+  max-width: 90%;
+  border: 1px solid #2C3E50;
+}
+
+/* FOOTER (buttons container) */
+.alert-footer-table {
+    border-top: 1px solid #000;
+    background-color: #2C3E50;
+}
+
+.alert-footer-table table {
+    width: 100%;
+    border-collapse: collapse; /* 🔥 ensures single clean divider */
+}
+
+.alert-footer-table td {
+    padding: 0;
+    width: 50%;
+    border-right: 1px solid #000;
+}
+
+.alert-footer-table td:last-child {
+    border-right: none; /* no extra border on the right edge */
+}
+
+.alert-footer-table button {
+    width: 100%;
+    height: 30px;
+
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* SINGLE BUTTON FOOTER */
+.alert-footer.single {
+  display: block;
+  border-top: 1px solid #000;
+  background-color: #2C3E50;
+}
+
+.alert-footer.single button {
+  width: 100%;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
 }
 
 /* Option82 Special Caopy button */

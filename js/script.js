@@ -15880,7 +15880,7 @@ function runFabAction(action) {
 // BUTTON ACTIONS
 function openDuplicateTab() {
     window.open(
-        "https://not-a-bot-support.github.io/autodocs/",
+        "https://not-a-bot-support.github.io/ccbo_autodocs/",
         "_blank"
     );
 }
@@ -16284,20 +16284,23 @@ function showAlert(message) {
 
     messageBox.textContent = message;
 
-    alertBox.style.display = "block";
+    // Show using flex (required for centering)
+    alertBox.style.display = "flex";
+    alertBox.classList.remove("hide");
     alertBox.classList.remove("show");
 
     requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            alertBox.classList.add("show");
-        });
+        alertBox.classList.add("show");
     });
 
     const closeAlert = () => {
         alertBox.classList.remove("show");
+        alertBox.classList.add("hide");
 
         setTimeout(() => {
             alertBox.style.display = "none";
+            alertBox.classList.remove("hide");
+            okBtn.onclick = null;
             hideOverlay();
         }, 300);
     };
@@ -16305,81 +16308,88 @@ function showAlert(message) {
     okBtn.onclick = closeAlert;
 }
 
-// CUSTOM CONFIRM
+
+// CUSTOM CONFIRM 1
 function showConfirm1(message) {
-  return new Promise((resolve) => {
-    const confirmBox = document.getElementById("customConfirm1");
+    return new Promise((resolve) => {
+        const confirmBox = document.getElementById("customConfirm1");
 
-    const messageBox = confirmBox.querySelector("#confirmMessage1");
-    const okBtn = confirmBox.querySelector("#confirmDelete");
-    const cancelBtn = confirmBox.querySelector("#confirmKeep");
+        const messageBox = confirmBox.querySelector("#confirmMessage1");
+        const okBtn = confirmBox.querySelector("#confirmDelete");
+        const cancelBtn = confirmBox.querySelector("#confirmKeep");
 
-    showOverlay();
+        showOverlay();
 
-    messageBox.textContent = message;
+        messageBox.textContent = message;
 
-    confirmBox.style.display = "block";
-    confirmBox.classList.remove("show");
+        confirmBox.style.display = "flex";
+        confirmBox.classList.remove("hide");
+        confirmBox.classList.remove("show");
 
-    requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             confirmBox.classList.add("show");
         });
+
+        const cleanup = (result) => {
+            confirmBox.classList.remove("show");
+            confirmBox.classList.add("hide");
+
+            setTimeout(() => {
+                confirmBox.style.display = "none";
+                confirmBox.classList.remove("hide");
+
+                okBtn.onclick = null;
+                cancelBtn.onclick = null;
+
+                hideOverlay();
+                resolve(result);
+            }, 300);
+        };
+
+        okBtn.onclick = () => cleanup(true);
+        cancelBtn.onclick = () => cleanup(false);
     });
-
-    const cleanup = (result) => {
-        confirmBox.classList.remove("show");
-
-        setTimeout(() => {
-            confirmBox.style.display = "none";
-            hideOverlay();
-
-            okBtn.onclick = null;
-            cancelBtn.onclick = null;
-
-            resolve(result);
-        }, 300);
-    };
-
-    okBtn.onclick = () => cleanup(true);
-    cancelBtn.onclick = () => cleanup(false);
-  });
 }
 
+
+// CUSTOM CONFIRM 2
 function showConfirm2(message) {
-  return new Promise((resolve) => {
-    const confirmBox = document.getElementById("customConfirm2");
+    return new Promise((resolve) => {
+        const confirmBox = document.getElementById("customConfirm2");
 
-    const messageBox = confirmBox.querySelector("#confirmMessage2");
-    const okBtn = confirmBox.querySelector("#confirmOk");
-    const cancelBtn = confirmBox.querySelector("#confirmCancel");
+        const messageBox = confirmBox.querySelector("#confirmMessage2");
+        const okBtn = confirmBox.querySelector("#confirmOk");
+        const cancelBtn = confirmBox.querySelector("#confirmCancel");
 
-    showOverlay();
+        showOverlay();
 
-    messageBox.textContent = message;
+        messageBox.textContent = message;
 
-    // Show alert
-    confirmBox.style.display = "block";
-    confirmBox.classList.remove("show");
+        confirmBox.style.display = "flex";
+        confirmBox.classList.remove("hide");
+        confirmBox.classList.remove("show");
 
-    requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             confirmBox.classList.add("show");
         });
+
+        const cleanup = (result) => {
+            confirmBox.classList.remove("show");
+            confirmBox.classList.add("hide");
+
+            setTimeout(() => {
+                confirmBox.style.display = "none";
+                confirmBox.classList.remove("hide");
+
+                okBtn.onclick = null;
+                cancelBtn.onclick = null;
+
+                hideOverlay();
+                resolve(result);
+            }, 300);
+        };
+
+        okBtn.onclick = () => cleanup(true);
+        cancelBtn.onclick = () => cleanup(false);
     });
-
-    const cleanup = (result) => {
-        confirmBox.classList.remove("show");
-
-        setTimeout(() => {
-            confirmBox.style.display = "none";
-            hideOverlay();
-
-            resolve(result);
-        }, 300);
-    };
-
-    okBtn.onclick = () => cleanup(true);
-    cancelBtn.onclick = () => cleanup(false);
-  });
 }
