@@ -695,6 +695,7 @@ function initializeVariables() {
         affectedTool: q('[name="affectedTool"]'),
         requestType: q('[name="requestType"]'),
         vasProduct: q('[name="vasProduct"]'),
+        othersConcern: q('[name="othersConcern"]'),
     };
 }
 
@@ -1802,8 +1803,10 @@ function createIntentBasedForm() {
                 "Rentals - NRC- Cost of Unit/Gadgets",
                 "Rentals- Service Connection Charge",
                 "Usage - Tolls (UnliFam Call)",
-                "Usage - Other Tolls"
+                "Usage - Other Tolls",
+                "Others"
             ] },
+            { label: "Other Concern", type: "textarea", name: "othersConcern", placeholder: "Describe the customer's concern."},
             { label: "Request Status", type: "select", name: "ffupStatus", options: [
                 "", 
                 "Beyond SLA", 
@@ -2055,6 +2058,15 @@ function createIntentBasedForm() {
             renderButtons();
         });
 
+        const requestType = document.querySelector("[name='requestType']");
+        requestType.addEventListener("change", () => {
+            if (requestType.value === "Others") {
+                showFields(["othersConcern"]);
+            } else {
+                hideSpecificFields(["othersConcern"]);
+            }
+        });
+
         const outboundResult1 = document.querySelector("[name='outboundResult1']");
         if (outboundResult1) {
             outboundResult1.addEventListener("change", () => {
@@ -2107,7 +2119,8 @@ function createIntentBasedForm() {
                 "", 
                 "Account Balance",
                 "Payment Details",
-                "Payment Posting"
+                "Payment Posting",
+                "Others"
             ] },
             { label: "Account Balance for", type: "select", name: "subType", options: [
                 "", 
@@ -2121,6 +2134,7 @@ function createIntentBasedForm() {
                 "SCC (Transfer fee, Reroute, Change Unit)",
                 
             ]},
+            { label: "Other Concern", type: "textarea", name: "othersConcern", placeholder: "Describe the customer's concern."},
             { label: "Actions Taken/ Remarks", type: "textarea", name: "remarks", placeholder: "Please input all actions taken, details/information shared, or any additional remarks to assist the customer. You may also include any SNOW or E-Solve tickets raised for tool-related issues or latency."},
             // { label: "SO/SR", type: "text", name: "srNum"},
             // Callout Details - Primary
@@ -2360,6 +2374,20 @@ function createIntentBasedForm() {
             renderButtons();
         });
 
+        const requestType = document.querySelector("[name='requestType']");
+        requestType.addEventListener("change", () => {
+            resetAllFields(["calloutAttempt", "requestType"]);
+            if (requestType.selectedIndex === 1) {
+                showFields(["subType"]);
+                hideSpecificFields(["othersConcern"]);
+            } else if (requestType.selectedIndex === 4) {
+                showFields(["othersConcern"]);
+                hideSpecificFields(["subType"]);
+            } else {
+                hideSpecificFields(["subType", "othersConcern"]);
+            }
+        });
+
         const outboundResult1 = document.querySelector("[name='outboundResult1']");
         if (outboundResult1) {
             outboundResult1.addEventListener("change", () => {
@@ -2397,15 +2425,7 @@ function createIntentBasedForm() {
             });
         }
 
-        const requestType = document.querySelector("[name='requestType']");
-        requestType.addEventListener("change", () => {
-            resetAllFields(["calloutAttempt", "requestType"]);
-            if (requestType.selectedIndex === 1) {
-                showFields(["subType"]);
-            } else {
-                hideSpecificFields(["subType"]);
-            }
-        });
+
 
         updateToolLabelVisibility();
 
@@ -4416,8 +4436,10 @@ function createIntentBasedForm() {
                 "Social Media Agent",
                 "SSC Personnel",
                 "Technician",
-                "Telesales"
+                "Telesales",
+                "Other Personnel"
             ]},
+            { label: "Other Concern", type: "textarea", name: "othersConcern", placeholder: "Describe the customer's concern."},
             { label: "Actions Taken/ Remarks", type: "textarea", name: "remarks", placeholder: "Please input all actions taken, details/information shared, or any additional remarks to assist the customer. You may also include any SNOW or E-Solve tickets raised for tool-related issues or latency."},
             // Callout Details - Primary
             { label: "Primary Number", type: "number", name: "primaryNumber"},
@@ -4653,6 +4675,15 @@ function createIntentBasedForm() {
             }
             updateToolLabelVisibility();
             renderButtons();
+        });
+
+        const requestType = document.querySelector("[name='requestType']");
+        requestType.addEventListener("change", () => {
+            if (requestType.value === "Other Personnel") {
+                showFields(["othersConcern"]);
+            } else {
+                hideSpecificFields(["othersConcern"]);
+            }
         });
 
         const outboundResult1 = document.querySelector("[name='outboundResult1']");
@@ -5680,6 +5711,7 @@ function createIntentBasedForm() {
                 "Caller ID Bundle",
                 "Others"
             ] },
+            { label: "Other Concern", type: "textarea", name: "othersConcern", placeholder: "Describe the customer's concern."},
             { label: "Request Status", type: "select", name: "ffupStatus", options: [
                 "", 
                 "Beyond SLA", 
@@ -5981,6 +6013,15 @@ function createIntentBasedForm() {
             }
             updateToolLabelVisibility();
             renderButtons();
+        });
+
+        const requestType = document.querySelector("[name='requestType']");
+        requestType.addEventListener("change", () => {
+            if (requestType.value === "Others") {
+                showFields(["othersConcern"]);
+            } else {
+                hideSpecificFields(["othersConcern"]);
+            }
         });
 
         const outboundResult1 = document.querySelector("[name='outboundResult1']");
@@ -6363,6 +6404,307 @@ function createIntentBasedForm() {
         updateToolLabelVisibility();
 
     } 
+
+    // Others Intents
+    else if (selectedValue === "formInqOthers" || selectedValue === "formReqOthers" || selectedValue === "formFfupOthers" || selectedValue === "formCompOthers") { 
+        const table = document.createElement("table");
+
+        const fields = [
+            { label: "Callout Attempt", type: "select", name: "calloutAttempt", options: [
+                "", 
+                "1st", 
+                "2nd"
+            ]},
+            { label: "Other Concern", type: "textarea", name: "othersConcern", placeholder: "Describe the customer's concern."},
+            { label: "Request Status", type: "select", name: "ffupStatus", options: [
+                "", 
+                "Beyond SLA", 
+                "Within SLA"
+            ]},
+            { label: "Actions Taken/ Remarks", type: "textarea", name: "remarks", placeholder: "Please input all actions taken, details/information shared, or any additional remarks to assist the customer. You may also include any SNOW or E-Solve tickets raised for tool-related issues or latency."},
+            { label: "SO/SR", type: "text", name: "srNum"},
+            // Callout Details - Primary
+            { label: "Primary Number", type: "number", name: "primaryNumber"},
+            { label: "Arrival Time", type: "text", name: "arrivalTime1"},
+            { label: "Message", type: "text", name: "message1"},
+            { label: "Result", type: "select", name: "outboundResult1", options: [
+                "", 
+                "Answered",
+                "No Answer",
+                "Unattended"
+            ] },
+            // Secondary
+            { label: "Same w/ Primary #?", type: "select", name: "checkSecondaryNum", options: [
+                "", 
+                "Yes",
+                "No"
+            ] },
+            { label: "Secondary Number", type: "text", name: "secondaryNumber"},
+            { label: "Arrival Time", type: "text", name: "arrivalTime2"},
+            { label: "Message", type: "text", name: "message2"},
+            { label: "Result", type: "select", name: "outboundResult2", options: [
+                "", 
+                "Answered",
+                "No Answer",
+                "Unattended"
+            ] },
+            // Landline
+            { label: "Landline Number", type: "number", name: "landlineNumber"},
+            { label: "Arrival Time", type: "text", name: "arrivalTime3"},
+            { label: "Message", type: "text", name: "message3"},
+            { label: "Result", type: "select", name: "outboundResult3", options: [
+                "", 
+                "Answered",
+                "No Answer",
+                "Unattended"
+            ] },
+            { label: "Outbound Remarks", type: "textarea", name: "outboundRemarks", placeholder: "Please input all actions taken, details/information shared, or any additional remarks to assist the customer. You may also include any SNOW or E-Solve tickets raised for tool-related issues or latency."},
+            { label: "Outbound Result", type: "select", name: "outboundResult4", options: [
+                "", 
+                "Successful",
+                "Unsuccessful"
+            ] },
+            { label: "SMS Sent? Y/N", type: "select", name: "smsSent", options: [
+                "", 
+                "Yes",
+                "No"
+            ] },
+            { label: "Case Status", type: "select", name: "caseStatus", options: [
+                "", 
+                "Closed Engage",
+                "Closed - Escalated",
+                "Closed - Resolved",
+                "Manage"
+            ] },
+        ];
+
+        function createDefinitionRow() {
+            const row = document.createElement("tr");
+            const td = document.createElement("td");
+
+            const div = document.createElement("div");
+            div.className = "form2DivDefinition";
+
+            const header = document.createElement("p");
+            header.textContent = "Definition";
+            header.className = "definition-header";
+
+            const ul = document.createElement("ul");
+            ul.className = "checklist";
+
+            const li = document.createElement("li");
+            li.textContent = "Requests, inquiries, or concerns not covered by existing categories or classifications.";
+            ul.appendChild(li);
+
+            // Assemble
+            div.appendChild(header);
+            div.appendChild(ul);
+
+            td.appendChild(div);
+            row.appendChild(td);
+
+            return row;
+        }
+
+        function createFieldRow(field) {
+            const row = document.createElement("tr");
+            row.style.display = field.name === "calloutAttempt" ? "table-row" : "none"; 
+
+            const td = document.createElement("td");
+            const divInput = document.createElement("div");
+            divInput.className = field.type === "textarea" ? "form2DivTextarea" : "form2DivInput";
+
+            const label = document.createElement("label");
+            label.textContent = `${field.label}`;
+            label.className = field.type === "textarea" ? "form2-label-textarea" : "form2-label";
+            label.setAttribute("for", field.name);
+
+            let input;
+            if (field.type === "toolLabel") {
+                const row = document.createElement("tr");
+                row.className = "tool-label-row";
+                row.dataset.relatedTo = field.relatedTo;
+
+                const td = document.createElement("td");
+                const div = document.createElement("div");
+
+                div.className = "formToolLabel";
+                div.textContent = field.label.replace("// ", "");
+
+                td.appendChild(div);
+                row.appendChild(td);
+
+                return row;
+            } else if (field.type === "select") {
+                input = document.createElement("select");
+                input.name = field.name;
+                input.className = "form2-input";
+                field.options.forEach((optionText, index)=> {
+                    const option = document.createElement("option");
+                    option.value = optionText;
+                    option.textContent = optionText;
+
+                    if (index === 0) {
+                        option.disabled = true;
+                        option.selected = true;
+                        option.style.fontStyle = "italic";
+                    }
+
+                    input.appendChild(option);
+                });
+            } else if (field.type === "textarea") {
+                input = document.createElement("textarea");
+                input.name = field.name;
+                input.className = "form2-textarea";
+                if (field.name === "remarks" ||field.name === "outboundRemarks") {
+                    input.rows = 4;
+                } else {
+                    input.rows = 2;
+                }
+                if (field.placeholder) input.placeholder = field.placeholder;
+            } else {
+                input = document.createElement("input");
+                input.type = field.type;
+                input.name = field.name;
+                input.className = "form2-input";
+                if (field.step) input.step = field.step;
+                if (field.placeholder) input.placeholder = field.placeholder;
+            }
+
+            divInput.appendChild(label);
+            divInput.appendChild(input);
+            td.appendChild(divInput);
+            row.appendChild(td);
+
+            return row;
+        }
+
+        function insertToolLabel(fields, label, relatedFieldName) {
+            fields.splice(
+                fields.findIndex(f => f.name === relatedFieldName),
+                0,
+                {
+                    label: `// ${label}`,
+                    type: "toolLabel",
+                    name: `toolLabel-${label.toLowerCase().replace(/\s/g, "-")}`,
+                    relatedTo: relatedFieldName
+                }
+            );
+        }
+
+        const enhancedFields = [...fields];
+
+        insertToolLabel(enhancedFields, "Primary Contact", "primaryNumber");
+        insertToolLabel(enhancedFields, "Secondary Contact", "checkSecondaryNum");
+        insertToolLabel(enhancedFields, "Landline", "landlineNumber");
+        insertToolLabel(enhancedFields, "------------------------------------------------------------------", "outboundRemarks");
+        
+        table.appendChild(createDefinitionRow());
+
+        enhancedFields.forEach((field) => {
+            const row = createFieldRow(field);
+            table.appendChild(row);
+        });
+
+        function updateToolLabelVisibility() {
+            const allToolLabels = document.querySelectorAll(".tool-label-row");
+            allToolLabels.forEach(labelRow => {
+                const relatedName = labelRow.dataset.relatedTo;
+                const relatedInput = document.querySelector(`[name="${relatedName}"]`);
+                if (relatedInput) {
+                    const relatedRow = relatedInput.closest("tr");
+                    labelRow.style.display = (relatedRow && relatedRow.style.display !== "none") ? "table-row" : "none";
+                }
+            });
+        }
+
+        form2Container.appendChild(table);
+
+        function renderButtons() {
+            const calloutAttempt = document.querySelector("[name='calloutAttempt']")?.value;
+
+            const isFirstAttempt = calloutAttempt === "1st";
+
+            const outboundLabel = (calloutAttempt === "2nd")
+                ? "📝 Generate Notes"
+                : "✚ Outbound Details";
+
+            const buttonLabels = [outboundLabel, "💾 Save", "🔄 Reset"];
+
+            const buttonHandlers = [
+                isFirstAttempt ? outboundDetailsForm : fuseSfNotesButtonHandler,
+                saveFormData,
+                resetButtonHandler,
+            ];
+
+            const oldTable = document.getElementById("form2ButtonTable");
+            if (oldTable) oldTable.remove();
+
+            const buttonTable = createButtons(buttonLabels, buttonHandlers);
+            buttonTable.id = "form2ButtonTable";
+
+            form2Container.appendChild(buttonTable);
+        }
+
+        const calloutAttempt = document.querySelector("[name='calloutAttempt']");
+        calloutAttempt.addEventListener("change", () => {
+            resetAllFields(["calloutAttempt"]);
+            if (calloutAttempt.selectedIndex === 1) {
+                if (selectedValue === "formFfupOthers") {
+                    showFields(["ffupStatus"]);
+                } else {
+                    hideSpecificFields(["ffupStatus"]);
+                }
+                showFields(["othersConcern", "remarks", "srNum"]);
+                hideOutboundFields();
+            } else {
+                showOutboundFields();
+                hideSpecificFields(["othersConcern", "ffupStatus", "remarks", "srNum"]);
+            }
+            updateToolLabelVisibility();
+            renderButtons();
+        });
+
+        const outboundResult1 = document.querySelector("[name='outboundResult1']");
+        if (outboundResult1) {
+            outboundResult1.addEventListener("change", () => {
+                if (outboundResult1.selectedIndex === 2 || outboundResult1.selectedIndex === 3) {
+                    showFields(["checkSecondaryNum"]);
+                } else {
+                    resetOutboundFields();
+                }
+                updateToolLabelVisibility();
+            });
+        }
+
+        const checkSecondaryNum = document.querySelector("[name='checkSecondaryNum']");
+        if (checkSecondaryNum) {
+            checkSecondaryNum.addEventListener("change", () => {
+                if (checkSecondaryNum.selectedIndex === 2) {
+                    showFields(["secondaryNumber", "arrivalTime2", "message2", "outboundResult2"]);
+                } else {
+                    showFields(["landlineNumber", "arrivalTime3", "message3", "outboundResult3"]);
+                    hideSpecificFields(["secondaryNumber", "arrivalTime2", "message2", "outboundResult2"]);
+                }
+                updateToolLabelVisibility();
+            });
+        }
+
+        const outboundResult2 = document.querySelector("[name='outboundResult2']");
+        if (outboundResult2) {
+            outboundResult2.addEventListener("change", () => {
+                if (outboundResult2.selectedIndex === 2 || outboundResult2.selectedIndex === 3) {
+                    showFields(["landlineNumber", "arrivalTime3", "message3", "outboundResult3"]);
+                } else {
+                    hideSpecificFields(["landlineNumber", "arrivalTime3", "message3", "outboundResult3"]);
+                }
+                updateToolLabelVisibility();
+            });
+        }
+
+        updateToolLabelVisibility();
+
+    }
 
     // Tech Complaints
     else if (voiceAndDataForms.includes(selectedValue)) { 
@@ -12997,7 +13339,7 @@ function fuseSfNotesButtonHandler(showFloating = true, sourceDiv = null) {
         return (field.value || "").trim();
     }
 
-    function constTechCAOutput(container) {
+    function const_C_and_A_Output(container) {
         const fields = [
             // Remarks
             { name: "nmsSkinRemarks"},
@@ -13246,7 +13588,7 @@ function fuseSfNotesButtonHandler(showFloating = true, sourceDiv = null) {
     ];
 
     const ffupBasedOnRequestType = [
-        "formFfupTempDisco", "formFfupReconnect", "formFfupTempDisco"
+        "formFfupTempDisco", "formFfupReconnect"
     ];
 
     const optGroupIntents = [
@@ -13272,6 +13614,10 @@ function fuseSfNotesButtonHandler(showFloating = true, sourceDiv = null) {
         "form500_5", "form501_7", "form101_5", "form510_9", "form500_6"
     ]
 
+    const othersConcern = [
+        "formReqOthers", "formInqOthers", "formCompOthers"
+    ]
+
     const selectOriginValue = getFuseSfFieldValueIfVisible("selectOrigin");
     const selectOrigin = selectOriginValue ? `/ ${selectOriginValue}` : "";
 
@@ -13285,59 +13631,75 @@ function fuseSfNotesButtonHandler(showFloating = true, sourceDiv = null) {
     if (emptyFields.length > 0) return;
 
     // NonTech Intents Output
-    if (basedOnSelectedIntentText.includes(vars.selectedIntent)) {
+    if (othersConcern.includes(vars.selectedIntent)) {
+        concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.selectVOC} ABOUT ${vars.othersConcern}`;
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
+        outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
+    } else if (basedOnSelectedIntentText.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.selectedIntentText}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (basedOnSelectedIntentAndRequestType.includes(vars.selectedIntent)) {
-        concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.selectedIntentText} - ${vars.requestType}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        if (vars.requestType === "Others") {
+            concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.selectedIntentText} - ${vars.othersConcern}`;
+        } else {
+            concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.selectedIntentText} - ${vars.requestType}`;
+        }
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (basedOnSelectedOptGroupLabel.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.selectedOptGroupLabel} - ${vars.selectedIntentText}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (basedOnRequestType.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${vars.requestType}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     }
 
     // Non-Tech Follow-ups
     else if (ffupBasedOnSelectedIntent.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.selectedIntentText}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (ffupBasedOnSelectedIntentAndRequestType.includes(vars.selectedIntent)) {
-        concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.selectedIntentText} (${vars.requestType})`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        if (vars.requestType === "Others") {
+            concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.selectedIntentText} (${vars.othersConcern})`;
+        } else {
+            concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.selectedIntentText} (${vars.requestType})`;
+        }
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (ffupBasedOnOptGroupLabel.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.selectedOptGroupLabel}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (ffupBasedOnRequestType.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.requestType}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
+        outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
+    } else if (vars.selectedIntent === "formFfupOthers") {
+        concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP ${vars.ffupStatus} - ${vars.othersConcern}`;
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } 
 
     // Tech Intents Output
     else if (vars.selectedIntent === "formFfupRepair") {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: FOLLOW-UP REPAIR ${vars.ffupStatus} (${cepCaseNumber})`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (optGroupIntents.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${selectedOptGroupLabel}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (optTextIntents.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${selectedIntentText}`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     } else if (alwaysOnIntents.includes(vars.selectedIntent)) {
         concernCopiedText = `CNDT_CCBO ${selectOrigin}${sfCaseNum}\n\nC: ${selectedIntentText} (ALWAYS ON)`;
-        actionsTakenCopiedText = constTechCAOutput(sourceDiv);
+        actionsTakenCopiedText = const_C_and_A_Output(sourceDiv);
         outboundDetailsCopiedText = constructOutboundDetails(sourceDiv);
     }
 
