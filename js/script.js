@@ -13823,6 +13823,7 @@ function showFuseSfNotesFloatingDiv(concernCopiedText, actionsTakenCopiedText, o
         floatingDiv.classList.add("hide");
 
         setTimeout(() => {
+			hideOverlay();
             floatingDiv.style.display = "none";
             floatingDiv.classList.remove("hide");
 
